@@ -1,0 +1,104 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "DEV-.#####",
+  "creation": "2026-08-31 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "development_information_section",
+    "development_name",
+    "status",
+    "software_product",
+    "development_type",
+    "environment",
+    "owner",
+    "version",
+    "repository",
+    "description"
+  ],
+  "fields": [
+    {
+      "fieldname": "development_information_section",
+      "fieldtype": "Section Break",
+      "label": "Development Information"
+    },
+    {
+      "fieldname": "development_name",
+      "fieldtype": "Data",
+      "label": "Development Name",
+      "in_list_view": 1,
+      "reqd": 1
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "Planned\nIn Development\nTesting\nReleased\nMaintenance\nRetired",
+      "default": "Planned",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "software_product",
+      "fieldtype": "Data",
+      "label": "Software / Product",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "development_type",
+      "fieldtype": "Select",
+      "label": "Development Type",
+      "options": "Application\nAPI\nIntegration\nAutomation\nConfiguration\nEnhancement\nBug Fix\nOther",
+      "default": "Application"
+    },
+    {
+      "fieldname": "environment",
+      "fieldtype": "Select",
+      "label": "Environment",
+      "options": "Development\nTest\nUAT\nProduction\nOther"
+    },
+    {
+      "fieldname": "owner",
+      "fieldtype": "Link",
+      "label": "Owner",
+      "options": "User"
+    },
+    {
+      "fieldname": "version",
+      "fieldtype": "Data",
+      "label": "Version"
+    },
+    {
+      "fieldname": "repository",
+      "fieldtype": "Data",
+      "label": "Repository"
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Text Editor",
+      "label": "Description"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "module": "Software Development and Management",
+  "name": "ITIL Software Development",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
+}

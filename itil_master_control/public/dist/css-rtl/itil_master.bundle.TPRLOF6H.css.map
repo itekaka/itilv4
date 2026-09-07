@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../../../../../tmp/tmp-1650-fbiUCLalecno/itil_master_control/itil_master_control/public/css/itil_master.bundle.css"],
+  "sourcesContent": ["/* ITIL 4 Master Control Panel - Desk Custom Styling */\n\n:root {\n\t--itil-card-bg: #ffffff;\n\t--itil-card-border: #e2e8f0;\n\t--itil-text-primary: #1e293b;\n\t--itil-text-muted: #64748b;\n\t--itil-brand-accent: #2563eb;\n}\n\nbody[data-route*=\"itil\"] .workspace-sidebar {\n\tborder-left: 1px solid var(--itil-card-border);\n}\n\n.itil-desk-card {\n\tbackground-color: var(--itil-card-bg);\n\tborder: 1px solid var(--itil-card-border);\n\tborder-radius: 8px;\n\tpadding: 16px;\n\tbox-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);\n\ttransition: all 0.2s ease-in-out;\n}\n\n.itil-desk-card:hover {\n\tbox-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);\n\tborder-color: #cbd5e1;\n}\n\n.itil-health-badge {\n\tfont-weight: 600;\n\tpadding: 4px 8px;\n\tborder-radius: 4px;\n\tfont-size: 12px;\n}\n\n.itil-health-high {\n\tbackground-color: #dcfce7;\n\tcolor: #166534;\n}\n\n.itil-health-medium {\n\tbackground-color: #fef9c3;\n\tcolor: #854d0e;\n}\n\n.itil-health-low {\n\tbackground-color: #fee2e2;\n\tcolor: #991b1b;\n}\n"],
+  "mappings": ";AAEA;AACC;AACA;AACA;AACA;AACA;AAAA;AAGD;AACC;AAAA;AAGD;AACC;AACA;AACA;AACA;AACA;AACA;AAAA;AAGD;AACC;AACA;AAAA;AAGD;AACC;AACA;AACA;AACA;AAAA;AAGD;AACC;AACA;AAAA;AAGD;AACC;AACA;AAAA;AAGD;AACC;AACA;AAAA;",
+  "names": []
+}

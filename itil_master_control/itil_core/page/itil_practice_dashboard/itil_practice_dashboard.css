@@ -1,0 +1,464 @@
+.itil-pd-wrapper {
+    background: #ffffff;
+    color: #1e293b;
+    min-height: 100vh;
+}
+
+.itil-pd-container {
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Header navigation */
+
+.itil-pd-header-nav {
+    margin-bottom: 16px;
+}
+
+/* Main header */
+
+.itil-pd-header-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.itil-pd-header-main {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.itil-pd-icon-box {
+    font-size: 32px;
+    color: #2563eb;
+    background: #eff6ff;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #dbeafe;
+}
+
+.itil-pd-group-badge {
+    display: inline-block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    background: #0284c7;
+    color: #ffffff;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+
+.itil-pd-header-text h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+    color: #0f172a;
+}
+
+.itil-pd-header-text p {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+}
+
+.itil-pd-header-meta {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.itil-pd-header-meta span {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+/* Metrics */
+
+.itil-pd-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.itil-pd-metric-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}
+
+.itil-pd-metric-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #64748b;
+    letter-spacing: 0.5px;
+}
+
+.itil-pd-metric-value {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 6px 0;
+    color: #0f172a;
+}
+
+.itil-pd-metric-value.text-primary {
+    color: #2563eb;
+}
+
+.itil-pd-metric-value.text-success {
+    color: #16a34a;
+}
+
+.itil-pd-metric-value.text-warning {
+    color: #d97706;
+}
+
+.itil-pd-metric-sub {
+    font-size: 11px;
+    color: #64748b;
+}
+
+/* Actions */
+
+.itil-pd-actions-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    background: #ffffff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+/* Content cards */
+
+.itil-pd-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}
+
+.itil-pd-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 4px;
+    color: #0f172a;
+}
+
+/* Table */
+
+.table-dark-custom {
+    background: #ffffff;
+    color: #1e293b;
+    border-color: #e2e8f0;
+}
+
+.table-dark-custom th {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    color: #64748b;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.table-dark-custom td {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    color: #334155;
+    font-size: 13px;
+}
+
+/* Links */
+
+.itil-pd-link {
+    color: #2563eb;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.itil-pd-link:hover {
+    text-decoration: underline;
+}
+
+/* Empty state */
+
+.itil-pd-empty-state {
+    padding: 24px;
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* Phase 2 */
+
+.itil-pd-phase2-card {
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    color: #64748b;
+}
+
+.itil-pd-phase2-icon {
+    font-size: 28px;
+    color: #0284c7;
+    margin-bottom: 8px;
+}
+
+.itil-pd-phase2-card h4 {
+    font-size: 15px;
+    color: #1e293b;
+    margin-bottom: 6px;
+}
+
+/* Error */
+
+.itil-pd-error-card {
+    background: #ffffff;
+    border: 1px solid #ef4444;
+    border-radius: 10px;
+    padding: 32px;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.itil-pd-error-card h3 {
+    color: #dc2626;
+    margin-bottom: 12px;
+}
+
+.itil-pd-error-card p {
+    color: #64748b;
+    margin-bottom: 20px;
+}
+
+/* ========================================================================= */
+/* Project Management Gantt Timeline Styles                                  */
+/* ========================================================================= */
+
+.itil-gantt-section-card {
+    overflow: hidden;
+}
+
+.itil-gantt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 12px;
+}
+
+.itil-gantt-title-group h3 {
+    margin: 0 0 2px 0;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.itil-gantt-title-group p {
+    font-size: 12px;
+    margin: 0;
+    color: #64748b;
+}
+
+.itil-gantt-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.itil-gantt-view-modes button.active {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+    border-color: #2563eb !important;
+}
+
+.itil-gantt-container {
+    position: relative;
+    width: 100%;
+    min-height: 220px;
+    background: #fafafa;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.itil-gantt-svg-wrapper {
+    min-width: 600px;
+    width: 100%;
+}
+
+/* Frappe Gantt Modern Polish */
+.itil-gantt-container .gantt-container {
+    font-family: inherit;
+}
+
+.itil-gantt-container .gantt .grid-header {
+    fill: #f8fafc;
+    stroke: #e2e8f0;
+}
+
+.itil-gantt-container .gantt .grid-row {
+    fill: #ffffff;
+}
+
+.itil-gantt-container .gantt .grid-row:nth-child(even) {
+    fill: #fcfcfd;
+}
+
+.itil-gantt-container .gantt .row-line {
+    stroke: #f1f5f9;
+}
+
+.itil-gantt-container .gantt .tick {
+    stroke: #e2e8f0;
+    stroke-width: 0.5;
+}
+
+.itil-gantt-container .gantt .tick.thick {
+    stroke: #cbd5e1;
+    stroke-width: 1;
+}
+
+.itil-gantt-container .gantt .today-highlight {
+    fill: rgba(37, 99, 235, 0.08);
+}
+
+.itil-gantt-container .gantt .bar-label {
+    fill: #0f172a;
+    font-weight: 600;
+    font-size: 11px;
+}
+
+/* Custom Status Bars */
+.itil-gantt-container .gantt .bar-wrapper.bar-in-progress .bar {
+    fill: #3b82f6;
+}
+.itil-gantt-container .gantt .bar-wrapper.bar-in-progress .bar-progress {
+    fill: #1d4ed8;
+}
+
+.itil-gantt-container .gantt .bar-wrapper.bar-on-hold .bar {
+    fill: #f59e0b;
+}
+.itil-gantt-container .gantt .bar-wrapper.bar-on-hold .bar-progress {
+    fill: #b45309;
+}
+
+.itil-gantt-container .gantt .bar-wrapper.bar-completed .bar {
+    fill: #10b981;
+}
+.itil-gantt-container .gantt .bar-wrapper.bar-completed .bar-progress {
+    fill: #047857;
+}
+
+.itil-gantt-container .gantt .bar-wrapper.bar-planning .bar {
+    fill: #6366f1;
+}
+.itil-gantt-container .gantt .bar-wrapper.bar-planning .bar-progress {
+    fill: #4338ca;
+}
+
+.itil-gantt-container .gantt .bar-wrapper.bar-cancelled .bar {
+    fill: #94a3b8;
+    opacity: 0.7;
+}
+.itil-gantt-container .gantt .bar-wrapper.bar-cancelled .bar-progress {
+    fill: #64748b;
+}
+
+/* Popup card */
+.itil-gantt-popup-card {
+    padding: 10px 14px;
+    background: #1e293b;
+    color: #f8fafc;
+    border-radius: 8px;
+    font-size: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    max-width: 280px;
+}
+
+.itil-gantt-popup-card .gantt-pop-title {
+    font-weight: 700;
+    font-size: 13px;
+    color: #ffffff;
+    margin-bottom: 6px;
+}
+
+.itil-gantt-popup-card .gantt-pop-status {
+    margin-bottom: 8px;
+}
+
+.itil-gantt-popup-card .gantt-pop-row {
+    margin-bottom: 4px;
+    color: #cbd5e1;
+}
+
+.itil-gantt-popup-card .gantt-pop-desc {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid #334155;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+.itil-gantt-popup-card .gantt-pop-action {
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid #334155;
+    color: #94a3b8;
+}
+
+.badge-status-in-progress { background-color: #2563eb; color: #fff; }
+.badge-status-on-hold { background-color: #d97706; color: #fff; }
+.badge-status-completed { background-color: #16a34a; color: #fff; }
+.badge-status-planning { background-color: #4f46e5; color: #fff; }
+.badge-status-cancelled { background-color: #64748b; color: #fff; }
+
+/* Responsive */
+
+@media (max-width: 768px) {
+    .itil-pd-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .itil-pd-header-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .itil-gantt-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .itil-pd-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .itil-pd-container {
+        padding: 12px;
+    }
+}

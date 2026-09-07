@@ -1,0 +1,99 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SLA-.#####",
+ "creation": "2026-08-31 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "sla_information_section",
+  "sla_name",
+  "status",
+  "service_name",
+  "customer",
+  "sla_owner",
+  "targets_section",
+  "availability_target",
+  "response_target",
+  "resolution_target"
+ ],
+ "fields": [
+  {
+   "fieldname": "sla_information_section",
+   "fieldtype": "Section Break",
+   "label": "SLA Information"
+  },
+  {
+   "fieldname": "sla_name",
+   "fieldtype": "Data",
+   "label": "SLA Name",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nActive\nSuspended\nExpired",
+   "default": "Draft"
+  },
+  {
+   "fieldname": "service_name",
+   "fieldtype": "Data",
+   "label": "Service Name",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "sla_owner",
+   "fieldtype": "Link",
+   "label": "SLA Owner",
+   "options": "User"
+  },
+  {
+   "fieldname": "targets_section",
+   "fieldtype": "Section Break",
+   "label": "Service Level Targets"
+  },
+  {
+   "fieldname": "availability_target",
+   "fieldtype": "Percent",
+   "label": "Availability Target"
+  },
+  {
+   "fieldname": "response_target",
+   "fieldtype": "Duration",
+   "label": "Response Target"
+  },
+  {
+   "fieldname": "resolution_target",
+   "fieldtype": "Duration",
+   "label": "Resolution Target"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "module": "Service Level Management",
+ "name": "ITIL Service Level Agreement",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

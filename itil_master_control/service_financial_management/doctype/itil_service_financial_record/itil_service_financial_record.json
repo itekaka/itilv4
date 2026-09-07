@@ -1,0 +1,144 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SFM-.#####",
+ "creation": "2026-08-31 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "financial_information_section",
+  "record_name",
+  "status",
+  "service_name",
+  "financial_owner",
+  "description",
+  "financial_period_section",
+  "period_start",
+  "period_end",
+  "budget",
+  "actual_cost",
+  "forecast_cost",
+  "financial_analysis_section",
+  "variance",
+  "cost_category",
+  "benefit_summary",
+  "review_notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "financial_information_section",
+   "fieldtype": "Section Break",
+   "label": "Service Financial Information"
+  },
+  {
+   "fieldname": "record_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Financial Record",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nPlanned\nActive\nReviewed\nClosed",
+   "default": "Draft"
+  },
+  {
+   "fieldname": "service_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Service / Service Portfolio Item"
+  },
+  {
+   "fieldname": "financial_owner",
+   "fieldtype": "Link",
+   "label": "Financial Owner",
+   "options": "User"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "financial_period_section",
+   "fieldtype": "Section Break",
+   "label": "Financial Period"
+  },
+  {
+   "fieldname": "period_start",
+   "fieldtype": "Date",
+   "label": "Period Start"
+  },
+  {
+   "fieldname": "period_end",
+   "fieldtype": "Date",
+   "label": "Period End"
+  },
+  {
+   "fieldname": "budget",
+   "fieldtype": "Currency",
+   "label": "Budget"
+  },
+  {
+   "fieldname": "actual_cost",
+   "fieldtype": "Currency",
+   "label": "Actual Cost"
+  },
+  {
+   "fieldname": "forecast_cost",
+   "fieldtype": "Currency",
+   "label": "Forecast Cost"
+  },
+  {
+   "fieldname": "financial_analysis_section",
+   "fieldtype": "Section Break",
+   "label": "Financial Analysis"
+  },
+  {
+   "fieldname": "variance",
+   "fieldtype": "Currency",
+   "label": "Variance"
+  },
+  {
+   "fieldname": "cost_category",
+   "fieldtype": "Select",
+   "label": "Cost Category",
+   "options": "People\nTechnology\nLicensing\nInfrastructure\nSupplier\nOther"
+  },
+  {
+   "fieldname": "benefit_summary",
+   "fieldtype": "Text Editor",
+   "label": "Value / Benefit Summary"
+  },
+  {
+   "fieldname": "review_notes",
+   "fieldtype": "Text Editor",
+   "label": "Review Notes"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "module": "Service Financial Management",
+ "name": "ITIL Service Financial Record",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

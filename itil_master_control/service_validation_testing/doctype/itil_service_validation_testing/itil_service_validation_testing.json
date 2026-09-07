@@ -1,0 +1,106 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SVT-.#####",
+ "creation": "2026-08-31 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "testing_information_section",
+  "test_name",
+  "status",
+  "service_name",
+  "test_type",
+  "test_objective",
+  "test_execution_section",
+  "planned_date",
+  "execution_date",
+  "test_result",
+  "findings"
+ ],
+ "fields": [
+  {
+   "fieldname": "testing_information_section",
+   "fieldtype": "Section Break",
+   "label": "Validation & Testing"
+  },
+  {
+   "fieldname": "test_name",
+   "fieldtype": "Data",
+   "label": "Test Name",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Planned\nIn Progress\nPassed\nFailed\nCancelled",
+   "default": "Planned"
+  },
+  {
+   "fieldname": "service_name",
+   "fieldtype": "Data",
+   "label": "Service Name",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "test_type",
+   "fieldtype": "Select",
+   "label": "Test Type",
+   "options": "Functional\nPerformance\nSecurity\nAvailability\nUser Acceptance",
+   "default": "Functional"
+  },
+  {
+   "fieldname": "test_objective",
+   "fieldtype": "Text Editor",
+   "label": "Test Objective"
+  },
+  {
+   "fieldname": "test_execution_section",
+   "fieldtype": "Section Break",
+   "label": "Test Execution"
+  },
+  {
+   "fieldname": "planned_date",
+   "fieldtype": "Date",
+   "label": "Planned Date"
+  },
+  {
+   "fieldname": "execution_date",
+   "fieldtype": "Date",
+   "label": "Execution Date"
+  },
+  {
+   "fieldname": "test_result",
+   "fieldtype": "Text Editor",
+   "label": "Test Result"
+  },
+  {
+   "fieldname": "findings",
+   "fieldtype": "Text Editor",
+   "label": "Findings"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "module": "Service Validation and Testing",
+ "name": "ITIL Service Validation Testing",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

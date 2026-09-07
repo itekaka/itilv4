@@ -1,0 +1,146 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SUP-.#####",
+ "creation": "2026-08-31 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "supplier_information_section",
+  "supplier_name",
+  "status",
+  "supplier_type",
+  "supplier_owner",
+  "description",
+  "contract_section",
+  "contract_reference",
+  "contract_start",
+  "contract_end",
+  "performance_section",
+  "service_quality",
+  "risk_level",
+  "performance_status",
+  "review_date",
+  "review_notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "supplier_information_section",
+   "fieldtype": "Section Break",
+   "label": "Supplier Information"
+  },
+  {
+   "fieldname": "supplier_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Supplier Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Prospective\nActive\nUnder Review\nSuspended\nTerminated",
+   "default": "Prospective"
+  },
+  {
+   "fieldname": "supplier_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Supplier Type",
+   "options": "Strategic\nTactical\nOperational\nCommodity"
+  },
+  {
+   "fieldname": "supplier_owner",
+   "fieldtype": "Link",
+   "label": "Supplier Owner",
+   "options": "User"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "contract_section",
+   "fieldtype": "Section Break",
+   "label": "Contract & Relationship"
+  },
+  {
+   "fieldname": "contract_reference",
+   "fieldtype": "Data",
+   "label": "Contract Reference"
+  },
+  {
+   "fieldname": "contract_start",
+   "fieldtype": "Date",
+   "label": "Contract Start Date"
+  },
+  {
+   "fieldname": "contract_end",
+   "fieldtype": "Date",
+   "label": "Contract End Date"
+  },
+  {
+   "fieldname": "performance_section",
+   "fieldtype": "Section Break",
+   "label": "Supplier Performance"
+  },
+  {
+   "fieldname": "service_quality",
+   "fieldtype": "Select",
+   "label": "Service Quality",
+   "options": "Poor\nNeeds Improvement\nAcceptable\nGood\nExcellent",
+   "default": "Acceptable"
+  },
+  {
+   "fieldname": "risk_level",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Supplier Risk",
+   "options": "Low\nMedium\nHigh\nCritical",
+   "default": "Medium"
+  },
+  {
+   "fieldname": "performance_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Performance Status",
+   "options": "On Target\nAt Risk\nBelow Target\nNot Assessed",
+   "default": "Not Assessed"
+  },
+  {
+   "fieldname": "review_date",
+   "fieldtype": "Date",
+   "label": "Next Review Date"
+  },
+  {
+   "fieldname": "review_notes",
+   "fieldtype": "Text Editor",
+   "label": "Review Notes"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "module": "Supplier Management",
+ "name": "ITIL Supplier Record",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,131 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "OCM-.#####",
+ "creation": "2026-08-31 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "change_information_section",
+  "change_name",
+  "status",
+  "change_type",
+  "change_owner",
+  "description",
+  "stakeholder_section",
+  "stakeholders",
+  "impact_level",
+  "readiness_section",
+  "readiness_status",
+  "communication_plan",
+  "training_plan",
+  "review_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "change_information_section",
+   "fieldtype": "Section Break",
+   "label": "Organizational Change"
+  },
+  {
+   "fieldname": "change_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Change Initiative",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Planned\nAssessing\nPreparing\nImplementing\nStabilizing\nCompleted\nCancelled",
+   "default": "Planned"
+  },
+  {
+   "fieldname": "change_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Change Type",
+   "options": "Organizational\nProcess\nPeople\nTechnology\nCulture\nPolicy"
+  },
+  {
+   "fieldname": "change_owner",
+   "fieldtype": "Link",
+   "label": "Change Owner",
+   "options": "User"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "stakeholder_section",
+   "fieldtype": "Section Break",
+   "label": "Stakeholders & Impact"
+  },
+  {
+   "fieldname": "stakeholders",
+   "fieldtype": "Text Editor",
+   "label": "Key Stakeholders"
+  },
+  {
+   "fieldname": "impact_level",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Impact Level",
+   "options": "Low\nMedium\nHigh",
+   "default": "Medium"
+  },
+  {
+   "fieldname": "readiness_section",
+   "fieldtype": "Section Break",
+   "label": "Readiness & Adoption"
+  },
+  {
+   "fieldname": "readiness_status",
+   "fieldtype": "Select",
+   "label": "Readiness Status",
+   "options": "Not Assessed\nLow\nMedium\nHigh\nReady",
+   "default": "Not Assessed"
+  },
+  {
+   "fieldname": "communication_plan",
+   "fieldtype": "Text Editor",
+   "label": "Communication Plan"
+  },
+  {
+   "fieldname": "training_plan",
+   "fieldtype": "Text Editor",
+   "label": "Training & Enablement Plan"
+  },
+  {
+   "fieldname": "review_date",
+   "fieldtype": "Date",
+   "label": "Post-Implementation Review Date"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "module": "Organizational Change Management",
+ "name": "ITIL Organizational Change",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

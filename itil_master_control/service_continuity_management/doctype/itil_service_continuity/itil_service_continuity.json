@@ -1,0 +1,98 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SCM-.#####",
+ "creation": "2026-08-31 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "continuity_information_section",
+  "plan_name",
+  "status",
+  "service_name",
+  "business_impact",
+  "continuity_strategy",
+  "recovery_section",
+  "rto",
+  "rpo",
+  "recovery_procedure"
+ ],
+ "fields": [
+  {
+   "fieldname": "continuity_information_section",
+   "fieldtype": "Section Break",
+   "label": "Continuity Information"
+  },
+  {
+   "fieldname": "plan_name",
+   "fieldtype": "Data",
+   "label": "Plan Name",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nActive\nUnder Review\nRetired",
+   "default": "Draft"
+  },
+  {
+   "fieldname": "service_name",
+   "fieldtype": "Data",
+   "label": "Service Name",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "business_impact",
+   "fieldtype": "Text Editor",
+   "label": "Business Impact"
+  },
+  {
+   "fieldname": "continuity_strategy",
+   "fieldtype": "Text Editor",
+   "label": "Continuity Strategy"
+  },
+  {
+   "fieldname": "recovery_section",
+   "fieldtype": "Section Break",
+   "label": "Recovery"
+  },
+  {
+   "fieldname": "rto",
+   "fieldtype": "Duration",
+   "label": "Recovery Time Objective"
+  },
+  {
+   "fieldname": "rpo",
+   "fieldtype": "Duration",
+   "label": "Recovery Point Objective"
+  },
+  {
+   "fieldname": "recovery_procedure",
+   "fieldtype": "Text Editor",
+   "label": "Recovery Procedure"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "module": "Service Continuity Management",
+ "name": "ITIL Service Continuity",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,99 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SD-.#####",
+ "creation": "2026-08-31 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "design_information_section",
+  "design_name",
+  "status",
+  "service_name",
+  "service_owner",
+  "design_objectives",
+  "design_details_section",
+  "architecture",
+  "security_requirements",
+  "availability_requirements"
+ ],
+ "fields": [
+  {
+   "fieldname": "design_information_section",
+   "fieldtype": "Section Break",
+   "label": "Design Information"
+  },
+  {
+   "fieldname": "design_name",
+   "fieldtype": "Data",
+   "label": "Design Name",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nIn Design\nApproved\nRejected\nRetired",
+   "default": "Draft"
+  },
+  {
+   "fieldname": "service_name",
+   "fieldtype": "Data",
+   "label": "Service Name",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "service_owner",
+   "fieldtype": "Link",
+   "label": "Service Owner",
+   "options": "User"
+  },
+  {
+   "fieldname": "design_objectives",
+   "fieldtype": "Text Editor",
+   "label": "Design Objectives"
+  },
+  {
+   "fieldname": "design_details_section",
+   "fieldtype": "Section Break",
+   "label": "Design Details"
+  },
+  {
+   "fieldname": "architecture",
+   "fieldtype": "Text Editor",
+   "label": "Architecture"
+  },
+  {
+   "fieldname": "security_requirements",
+   "fieldtype": "Text Editor",
+   "label": "Security Requirements"
+  },
+  {
+   "fieldname": "availability_requirements",
+   "fieldtype": "Text Editor",
+   "label": "Availability Requirements"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "module": "Service Design",
+ "name": "ITIL Service Design",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,58 @@
+#itil4-master-control-panel {
+    padding: 20px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.itil-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 15px;
+}
+
+.itil-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 120px;
+}
+
+.itil-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+.itil-card-sparkline {
+    font-size: 16px;
+    color: #cbd5e1;
+    margin: 8px 0;
+}
+
+.itil-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #64748b;
+    margin-top: auto;
+}
+
+.itil-card-subinfo {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 4px;
+}
+
+/* Pewarnaan Status Indikator Sesuai Gambar Referensi Anda */
+.status-secured .itil-card-score b { color: #10b981; }
+.status-stable .itil-card-score b { color: #06b6d4; }
+.status-amber { border-left: 4px solid #f59e0b; }
+.status-critical { border-left: 4px solid #ef4444; }
+.status-critical .itil-card-score b { color: #ef4444; }

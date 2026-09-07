@@ -1,0 +1,134 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "MTR-.#####",
+ "creation": "2026-08-31 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "measurement_information_section",
+  "measurement_name",
+  "status",
+  "measurement_owner",
+  "reporting_period",
+  "description",
+  "measurement_definition_section",
+  "metric",
+  "target_value",
+  "actual_value",
+  "unit",
+  "performance_section",
+  "performance_status",
+  "findings",
+  "actions"
+ ],
+ "fields": [
+  {
+   "fieldname": "measurement_information_section",
+   "fieldtype": "Section Break",
+   "label": "Measurement Information"
+  },
+  {
+   "fieldname": "measurement_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Measurement / Report Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nPublished\nReviewed\nArchived",
+   "default": "Draft"
+  },
+  {
+   "fieldname": "measurement_owner",
+   "fieldtype": "Link",
+   "label": "Measurement Owner",
+   "options": "User"
+  },
+  {
+   "fieldname": "reporting_period",
+   "fieldtype": "Select",
+   "label": "Reporting Period",
+   "options": "Daily\nWeekly\nMonthly\nQuarterly\nSemi-Annual\nAnnual"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "measurement_definition_section",
+   "fieldtype": "Section Break",
+   "label": "Measurement Definition"
+  },
+  {
+   "fieldname": "metric",
+   "fieldtype": "Data",
+   "label": "Metric / KPI"
+  },
+  {
+   "fieldname": "target_value",
+   "fieldtype": "Float",
+   "label": "Target Value"
+  },
+  {
+   "fieldname": "actual_value",
+   "fieldtype": "Float",
+   "label": "Actual Value"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Data",
+   "label": "Unit"
+  },
+  {
+   "fieldname": "performance_section",
+   "fieldtype": "Section Break",
+   "label": "Performance & Findings"
+  },
+  {
+   "fieldname": "performance_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Performance Status",
+   "options": "On Target\nAt Risk\nBelow Target\nNot Measured",
+   "default": "Not Measured"
+  },
+  {
+   "fieldname": "findings",
+   "fieldtype": "Text Editor",
+   "label": "Findings"
+  },
+  {
+   "fieldname": "actions",
+   "fieldtype": "Text Editor",
+   "label": "Required Actions"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "module": "Measurement and Reporting",
+ "name": "ITIL Measurement Report",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

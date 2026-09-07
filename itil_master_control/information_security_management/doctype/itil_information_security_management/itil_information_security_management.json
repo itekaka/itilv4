@@ -1,0 +1,140 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "ISM-.#####",
+ "creation": "2026-08-31 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "security_information_section",
+  "security_control_name",
+  "status",
+  "security_domain",
+  "owner",
+  "description",
+  "security_assessment_section",
+  "confidentiality",
+  "integrity",
+  "availability",
+  "risk_level",
+  "control_details_section",
+  "control_objective",
+  "control_implementation",
+  "review_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "security_information_section",
+   "fieldtype": "Section Break",
+   "label": "Security Information"
+  },
+  {
+   "fieldname": "security_control_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Security Control / Requirement",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nPlanned\nImplemented\nUnder Review\nRetired",
+   "default": "Draft"
+  },
+  {
+   "fieldname": "security_domain",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Security Domain",
+   "options": "Identity & Access\nData Protection\nNetwork Security\nEndpoint Security\nApplication Security\nSecurity Operations\nGovernance & Compliance"
+  },
+  {
+   "fieldname": "owner",
+   "fieldtype": "Link",
+   "label": "Security Owner",
+   "options": "User"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "security_assessment_section",
+   "fieldtype": "Section Break",
+   "label": "Security Assessment"
+  },
+  {
+   "fieldname": "confidentiality",
+   "fieldtype": "Select",
+   "label": "Confidentiality Impact",
+   "options": "Low\nMedium\nHigh",
+   "default": "Medium"
+  },
+  {
+   "fieldname": "integrity",
+   "fieldtype": "Select",
+   "label": "Integrity Impact",
+   "options": "Low\nMedium\nHigh",
+   "default": "Medium"
+  },
+  {
+   "fieldname": "availability",
+   "fieldtype": "Select",
+   "label": "Availability Impact",
+   "options": "Low\nMedium\nHigh",
+   "default": "Medium"
+  },
+  {
+   "fieldname": "risk_level",
+   "fieldtype": "Select",
+   "label": "Risk Level",
+   "options": "Low\nMedium\nHigh\nCritical",
+   "default": "Medium"
+  },
+  {
+   "fieldname": "control_details_section",
+   "fieldtype": "Section Break",
+   "label": "Control Details"
+  },
+  {
+   "fieldname": "control_objective",
+   "fieldtype": "Text Editor",
+   "label": "Control Objective"
+  },
+  {
+   "fieldname": "control_implementation",
+   "fieldtype": "Text Editor",
+   "label": "Control Implementation"
+  },
+  {
+   "fieldname": "review_date",
+   "fieldtype": "Date",
+   "label": "Next Review Date"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "module": "Information Security Management",
+ "name": "ITIL Information Security Management",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

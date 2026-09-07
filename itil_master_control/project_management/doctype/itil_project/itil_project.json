@@ -1,0 +1,126 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "PRJ-.#####",
+ "creation": "2026-08-25 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "project_information_section",
+  "project_name",
+  "status",
+  "project_manager",
+  "description",
+  "project_schedule_section",
+  "start_date",
+  "schedule_column_break",
+  "end_date",
+  "project_tasks_section",
+  "task_gantt_html",
+  "tasks",
+  "change_management_section",
+  "linked_change_request"
+ ],
+ "fields": [
+  {
+   "fieldname": "project_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Project Name",
+   "reqd": 1
+  },
+  {
+   "default": "Planning",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Planning\nIn Progress\nOn Hold\nCompleted\nCancelled"
+  },
+  {
+   "fieldname": "project_manager",
+   "fieldtype": "Link",
+   "label": "Project Manager",
+   "options": "User"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "linked_change_request",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Linked Change Request",
+   "options": "ITIL Change Request"
+  },
+  {
+   "fieldname": "project_information_section",
+   "fieldtype": "Section Break",
+   "label": "Project Information"
+  },
+  {
+   "fieldname": "project_schedule_section",
+   "fieldtype": "Section Break",
+   "label": "Project Schedule"
+  },
+  {
+   "fieldname": "schedule_column_break",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "project_tasks_section",
+   "fieldtype": "Section Break",
+   "label": "Project Tasks & Timeline"
+  },
+  {
+   "fieldname": "task_gantt_html",
+   "fieldtype": "HTML",
+   "label": "Task Gantt"
+  },
+  {
+   "fieldname": "tasks",
+   "fieldtype": "Table",
+   "label": "Tasks",
+   "options": "ITIL Project Task"
+  },
+  {
+   "fieldname": "change_management_section",
+   "fieldtype": "Section Break",
+   "label": "Change Management"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "module": "Project Management",
+ "name": "ITIL Project",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

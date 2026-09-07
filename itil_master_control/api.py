@@ -1,0 +1,1364 @@
+import frappe
+from frappe import _
+from frappe.utils import now_datetime, date_diff, time_diff_in_hours, flt, getdate
+
+@frappe.whitelist()
+def get_practice_dashboard_metrics():
+    """
+    Returns real-time health scores and KPI indicators for all 24 ITIL 4 Practices
+    grouped by their Practice Group.
+    """
+
+    practices = frappe.get_all(
+        "ITIL Practice",
+        fields=[
+            "name",
+            "practice_name",
+            "practice_group",
+            "health_score",
+            "icon",
+            "practice_owner",
+            "open_items_count",
+            "sla_compliance_pct",
+            "trend_direction",
+        ],
+        order_by="display_order asc",
+    )
+
+    grouped_metrics = {
+        "General Management Practices": [],
+        "Service Management Practices": [],
+        "Technical Management Practices": [],
+    }
+
+    for p in practices:
+        practice_group = (
+            p.get("practice_group")
+            or "Service Management Practices"
+        )
+
+        if practice_group in grouped_metrics:
+            grouped_metrics[practice_group].append(p)
+
+    return grouped_metrics
+def calculate_measurement_reporting_metrics():
+    """
+    Calculate live metrics for Measurement & Reporting
+    directly from ITIL Measurement Report records.
+    """
+
+    doctype = "ITIL Measurement Report"
+
+    if not frappe.db.exists("DocType", doctype):
+        return {
+            "open_backlog": 0,
+            "health_score": 100.0,
+            "record_count": 0,
+        }
+
+    rows = frappe.get_all(
+        doctype,
+        fields=["name", "status", "performance_status"]
+    )
+
+    # Open backlog = records still in Draft
+    open_backlog = sum(
+        1
+        for row in rows
+        if row.get("status") == "Draft"
+    )
+
+    # Health score based on performance_status
+    weights = {
+        "On Target": 100.0,
+        "At Risk": 70.0,
+        "Below Target": 40.0,
+        "Not Measured": 50.0,
+    }
+
+    scores = []
+
+    for row in rows:
+        performance_status = row.get("performance_status")
+
+        if performance_status in weights:
+            scores.append(weights[performance_status])
+
+    if scores:
+        health_score = flt(sum(scores) / len(scores), 2)
+    else:
+        health_score = 100.0
+
+    return {
+        "open_backlog": open_backlog,
+        "health_score": health_score,
+        "record_count": len(rows),
+    }
+PRACTICE_HEALTH_WEIGHTS = {
+    "performance": {
+        "On Target": 100.0,
+        "At Risk": 70.0,
+        "Below Target": 40.0,
+        "Not Measured": 50.0,
+    },
+
+    "status": {
+        "Completed": 100.0,
+        "In Progress": 85.0,
+        "Planning": 80.0,
+        "On Hold": 50.0,
+        "Cancelled": 0.0,
+    },
+
+    "risk_status": {
+        "Open": 40.0,
+        "Mitigating": 70.0,
+        "Accepted": 60.0,
+        "Closed": 100.0,
+    },
+
+    "risk_likelihood": {
+        "Low": 100.0,
+        "Medium": 75.0,
+        "High": 50.0,
+    },
+
+    "risk_impact": {
+        "Low": 100.0,
+        "Medium": 75.0,
+        "High": 50.0,
+    },
+
+    "financial": {
+        "Closed": 100.0,
+        "Reviewed": 90.0,
+        "Active": 80.0,
+        "Planned": 70.0,
+        "Draft": 50.0,
+    },
+
+    "security": {
+        "Low": 100.0,
+        "Medium": 75.0,
+        "High": 50.0,
+        "Critical": 20.0,
+    },
+
+    "change_status": {
+        "Planned": 70.0,
+        "Assessing": 75.0,
+        "Preparing": 80.0,
+        "Implementing": 90.0,
+        "Stabilizing": 95.0,
+        "Completed": 100.0,
+        "Cancelled": 0.0,
+    },
+
+    "change_impact_level": {
+        "Low": 100.0,
+        "Medium": 75.0,
+        "High": 50.0,
+    },
+
+    "change_readiness_status": {
+        "Not Assessed": 50.0,
+        "Low": 40.0,
+        "Medium": 70.0,
+        "High": 90.0,
+        "Ready": 100.0,
+    },
+
+    "supplier_status": {
+        "Prospective": 70.0,
+        "Active": 100.0,
+        "Under Review": 75.0,
+        "Suspended": 40.0,
+        "Terminated": 0.0,
+    },
+
+    "supplier_service_quality": {
+        "Poor": 40.0,
+        "Needs Improvement": 60.0,
+        "Acceptable": 75.0,
+        "Good": 90.0,
+        "Excellent": 100.0,
+    },
+
+    "supplier_risk_level": {
+        "Low": 100.0,
+        "Medium": 75.0,
+        "High": 50.0,
+        "Critical": 20.0,
+    },
+
+    "supplier_performance_status": {
+        "On Target": 100.0,
+        "At Risk": 70.0,
+        "Below Target": 40.0,
+        "Not Assessed": 50.0,
+    },
+
+    "incident_status": {
+        "Open": 50.0,
+        "Investigating": 70.0,
+        "Workaround Applied": 80.0,
+        "Resolved": 95.0,
+        "Closed": 100.0,
+    },
+
+    "asset_status": {
+        "Active": 100.0,
+        "Maintenance": 70.0,
+        "Retired": 50.0,
+    },
+
+    "monitoring_status": {
+        "New": 50.0,
+        "Acknowledged": 70.0,
+        "In Progress": 80.0,
+        "Resolved": 95.0,
+        "Closed": 100.0,
+    },
+
+    "monitoring_severity": {
+        "Low": 100.0,
+        "Medium": 75.0,
+        "High": 50.0,
+        "Critical": 20.0,
+    },
+
+    "validation_status": {
+        "Planned": 70.0,
+        "In Progress": 80.0,
+        "Passed": 100.0,
+        "Failed": 30.0,
+        "Cancelled": 0.0,
+    },
+
+    "continuity_status": {
+        "Draft": 60.0,
+        "Active": 100.0,
+        "Under Review": 75.0,
+        "Retired": 50.0,
+    },
+
+    "catalogue_status": {
+        "Draft": 60.0,
+        "Published": 100.0,
+        "Retired": 50.0,
+    },
+
+    "workflow_state": {
+        "Draft": 50.0,
+        "Pending Approval": 60.0,
+        "Scheduled": 75.0,
+        "Implemented": 100.0,
+        "Rolled Back": 30.0,
+    },
+
+    "problem_status": {
+        "Open": 50.0,
+        "Under Investigation": 70.0,
+        "Known Error Identified": 80.0,
+        "Resolved": 100.0,
+    },
+
+    "design_status": {
+        "Draft": 60.0,
+        "In Design": 80.0,
+        "Approved": 100.0,
+        "Rejected": 30.0,
+        "Retired": 50.0,
+    },
+
+    "service_desk_status": {
+        "Open": 50.0,
+        "In Progress": 80.0,
+        "Pending": 60.0,
+        "Resolved": 95.0,
+        "Closed": 100.0,
+    },
+
+    "sla_status": {
+        "Draft": 60.0,
+        "Active": 100.0,
+        "Suspended": 50.0,
+        "Expired": 20.0,
+    },
+
+    "service_request_status": {
+        "Open": 50.0,
+        "In Progress": 80.0,
+        "Pending": 60.0,
+        "Approved": 90.0,
+        "Fulfilled": 100.0,
+        "Cancelled": 0.0,
+    },
+
+    "deployment_status": {
+        "Planned": 70.0,
+        "In Progress": 80.0,
+        "Successful": 100.0,
+        "Failed": 30.0,
+        "Rolled Back": 40.0,
+    },
+
+    "software_development_status": {
+        "Planned": 70.0,
+        "In Development": 80.0,
+        "Testing": 90.0,
+        "Released": 100.0,
+        "Maintenance": 85.0,
+        "Retired": 50.0,
+    },
+
+    "infrastructure_status": {
+        "Planned": 70.0,
+        "Active": 100.0,
+        "Maintenance": 70.0,
+        "Retired": 50.0,
+    },
+
+    "infrastructure_criticality": {
+        "Low": 100.0,
+        "Medium": 80.0,
+        "High": 50.0,
+        "Critical": 20.0,
+    },
+}
+
+
+
+PRACTICE_HEALTH_FORMULAS = {
+    "Measurement & Reporting": "performance",
+    "Project Management": "status",
+    "Risk Management": "risk",
+    "Service Financial Management": "financial",
+    "Information Security Management": "security",
+    "Architecture Management": "status",
+    "Knowledge Management": "status",
+    "Organizational Change Management": "change",
+    "Supplier Management": "supplier",
+    "Incident Management": "status",
+    "IT Asset Management": "status",
+    "Monitoring & Event Management": "status_severity",
+    "Service Validation & Testing": "status",
+    "Service Continuity Management": "status",
+    "Service Catalogue Management": "status",
+    "Release Management": "workflow_state",
+    "Problem Management": "status",
+    "Service Design": "status",
+    "Service Desk": "status",
+    "Service Level Management": "status",
+    "Service Request Management": "status",
+    "Deployment Management": "status",
+    "Software Development & Management": "status",
+    "Infrastructure & Platform Management": "status_criticality",
+}
+
+
+def _average(values):
+    """Return rounded average, or 100 when there are no usable values."""
+    if not values:
+        return 100.0
+
+    return flt(sum(values) / len(values), 2)
+
+
+def _weighted_average(rows, fieldname, weights):
+    """Calculate average score from one weighted field."""
+    scores = [
+        weights[row.get(fieldname)]
+        for row in rows
+        if row.get(fieldname) in weights
+    ]
+
+    return _average(scores)
+
+
+def _calculate_risk_health(row):
+    """Calculate health for one risk record."""
+    status_score = PRACTICE_HEALTH_WEIGHTS["risk_status"].get(
+        row.get("status")
+    )
+
+    likelihood_score = PRACTICE_HEALTH_WEIGHTS["risk_likelihood"].get(
+        row.get("likelihood")
+    )
+
+    impact_score = PRACTICE_HEALTH_WEIGHTS["risk_impact"].get(
+        row.get("impact")
+    )
+
+    if (
+        status_score is None
+        or likelihood_score is None
+        or impact_score is None
+    ):
+        return None
+
+    severity_score = (
+        likelihood_score + impact_score
+    ) / 2.0
+
+    return flt(
+        (0.40 * status_score) +
+        (0.60 * severity_score),
+        2
+    )
+
+
+def _calculate_change_health(row):
+    """Calculate health for one organizational change record."""
+    status_score = PRACTICE_HEALTH_WEIGHTS["change_status"].get(
+        row.get("status")
+    )
+
+    impact_score = PRACTICE_HEALTH_WEIGHTS["change_impact_level"].get(
+        row.get("impact_level")
+    )
+
+    readiness_score = PRACTICE_HEALTH_WEIGHTS[
+        "change_readiness_status"
+    ].get(row.get("readiness_status"))
+
+    if (
+        status_score is None
+        or impact_score is None
+        or readiness_score is None
+    ):
+        return None
+
+    return flt(
+        (0.40 * status_score) +
+        (0.30 * impact_score) +
+        (0.30 * readiness_score),
+        2
+    )
+
+
+def _calculate_supplier_health(row):
+    """Calculate health for one supplier record."""
+    status_score = PRACTICE_HEALTH_WEIGHTS["supplier_status"].get(
+        row.get("status")
+    )
+
+    quality_score = PRACTICE_HEALTH_WEIGHTS[
+        "supplier_service_quality"
+    ].get(row.get("service_quality"))
+
+    risk_score = PRACTICE_HEALTH_WEIGHTS[
+        "supplier_risk_level"
+    ].get(row.get("risk_level"))
+
+    performance_score = PRACTICE_HEALTH_WEIGHTS[
+        "supplier_performance_status"
+    ].get(row.get("performance_status"))
+
+    if (
+        status_score is None
+        or quality_score is None
+        or risk_score is None
+        or performance_score is None
+    ):
+        return None
+
+    return flt(
+        (0.25 * status_score) +
+        (0.30 * quality_score) +
+        (0.25 * risk_score) +
+        (0.20 * performance_score),
+        2
+    )
+
+
+def calculate_practice_live_metrics(practice_name):
+    """
+    Centralized READ-ONLY metric engine.
+
+    Does NOT update ITIL Practice.
+    """
+
+    formula_type = PRACTICE_HEALTH_FORMULAS.get(practice_name)
+
+    if not formula_type:
+        frappe.throw(
+            _("No health formula registered for practice '{0}'.").format(
+                practice_name
+            )
+        )
+
+    practice = frappe.db.get_value(
+        "ITIL Practice",
+        {"practice_name": practice_name},
+        ["name", "doctype_reference"],
+        as_dict=True,
+    )
+
+    if not practice:
+        frappe.throw(
+            _("ITIL Practice '{0}' was not found.").format(
+                practice_name
+            )
+        )
+
+    doctype = practice.doctype_reference
+
+    if not doctype or not frappe.db.exists("DocType", doctype):
+        return {
+            "practice": practice_name,
+            "formula_type": formula_type,
+            "doctype": doctype,
+            "record_count": 0,
+            "open_backlog": 0,
+            "health_score": 100.0,
+        }
+
+    # -------------------------------------------------------------------------
+    # PERFORMANCE
+    # -------------------------------------------------------------------------
+    if formula_type == "performance":
+        rows = frappe.get_all(
+            doctype,
+            fields=["name", "status", "performance_status"],
+        )
+
+        health_score = _weighted_average(
+            rows,
+            "performance_status",
+            PRACTICE_HEALTH_WEIGHTS["performance"],
+        )
+
+        open_backlog = sum(
+            1
+            for row in rows
+            if row.get("status") == "Draft"
+        )
+
+    # -------------------------------------------------------------------------
+    # STATUS
+    # -------------------------------------------------------------------------
+    elif formula_type == "status":
+        rows = frappe.get_all(
+            doctype,
+            fields=["name", "status"],
+        )
+
+        status_weights = {
+            "Project Management": PRACTICE_HEALTH_WEIGHTS["status"],
+            "Architecture Management": {
+                "Active": 100.0,
+                "Under Review": 75.0,
+                "Draft": 60.0,
+                "Retired": 50.0,
+            },
+            "Knowledge Management": {
+                "Published": 100.0,
+                "Draft": 60.0,
+                "Archived": 50.0,
+            },
+            "Incident Management": {
+                "Open": 40.0,
+                "Investigating": 60.0,
+                "Workaround Applied": 75.0,
+                "Resolved": 90.0,
+                "Closed": 100.0,
+            },
+            "IT Asset Management": {
+                "Active": 100.0,
+                "Maintenance": 70.0,
+                "Retired": 50.0,
+            },
+            "Service Validation & Testing": {
+                "Planned": 70.0,
+                "In Progress": 80.0,
+                "Passed": 100.0,
+                "Failed": 20.0,
+                "Cancelled": 0.0,
+            },
+            "Service Continuity Management": {
+                "Draft": 60.0,
+                "Active": 100.0,
+                "Under Review": 75.0,
+                "Retired": 50.0,
+            },
+            "Service Catalogue Management": {
+                "Draft": 60.0,
+                "Published": 100.0,
+                "Retired": 50.0,
+            },
+            "Problem Management": {
+                "Open": 40.0,
+                "Under Investigation": 60.0,
+                "Known Error Identified": 75.0,
+                "Resolved": 100.0,
+            },
+            "Service Design": {
+                "Draft": 60.0,
+                "In Design": 75.0,
+                "Approved": 100.0,
+                "Rejected": 20.0,
+                "Retired": 50.0,
+            },
+            "Service Desk": {
+                "Open": 50.0,
+                "In Progress": 75.0,
+                "Pending": 60.0,
+                "Resolved": 90.0,
+                "Closed": 100.0,
+            },
+            "Service Level Management": {
+                "Draft": 60.0,
+                "Active": 100.0,
+                "Suspended": 40.0,
+                "Expired": 30.0,
+            },
+            "Service Request Management": {
+                "Open": 50.0,
+                "In Progress": 75.0,
+                "Pending": 60.0,
+                "Approved": 85.0,
+                "Fulfilled": 100.0,
+                "Cancelled": 0.0,
+            },
+            "Deployment Management": {
+                "Planned": 70.0,
+                "In Progress": 80.0,
+                "Successful": 100.0,
+                "Failed": 20.0,
+                "Rolled Back": 30.0,
+            },
+            "Software Development & Management": {
+                "Planned": 70.0,
+                "In Development": 80.0,
+                "Testing": 85.0,
+                "Released": 100.0,
+                "Maintenance": 90.0,
+                "Retired": 50.0,
+            },
+        }
+
+        backlog_map = {
+            "Project Management": {
+                "In Progress", "On Hold", "Planning",
+            },
+            "Architecture Management": {
+                "Draft", "Under Review",
+            },
+            "Knowledge Management": {
+                "Draft",
+            },
+            "Incident Management": {
+                "Open", "Investigating", "Workaround Applied",
+            },
+            "IT Asset Management": {
+                "Maintenance",
+            },
+            "Service Validation & Testing": {
+                "Planned", "In Progress", "Failed",
+            },
+            "Service Continuity Management": {
+                "Draft", "Under Review",
+            },
+            "Service Catalogue Management": {
+                "Draft",
+            },
+            "Problem Management": {
+                "Open", "Under Investigation", "Known Error Identified",
+            },
+            "Service Design": {
+                "Draft", "In Design", "Rejected",
+            },
+            "Service Desk": {
+                "Open", "In Progress", "Pending",
+            },
+            "Service Level Management": {
+                "Draft", "Suspended",
+            },
+            "Service Request Management": {
+                "Open", "In Progress", "Pending", "Approved",
+            },
+            "Deployment Management": {
+                "Planned", "In Progress", "Failed", "Rolled Back",
+            },
+            "Software Development & Management": {
+                "Planned", "In Development", "Testing", "Maintenance",
+            },
+        }
+
+        weights = status_weights[practice_name]
+        backlog_statuses = backlog_map.get(practice_name, set())
+
+        health_score = _weighted_average(
+            rows,
+            "status",
+            weights,
+        )
+
+        open_backlog = sum(
+            1
+            for row in rows
+            if row.get("status") in backlog_statuses
+        )
+
+    # -------------------------------------------------------------------------
+    # STATUS + SEVERITY
+    # -------------------------------------------------------------------------
+    elif formula_type == "status_severity":
+        rows = frappe.get_all(
+            doctype,
+            fields=["name", "status", "severity"],
+        )
+
+        status_weights = {
+            "New": 50.0,
+            "Acknowledged": 70.0,
+            "In Progress": 80.0,
+            "Resolved": 95.0,
+            "Closed": 100.0,
+        }
+
+        severity_weights = PRACTICE_HEALTH_WEIGHTS["security"]
+
+        scores = []
+
+        for row in rows:
+            status_score = status_weights.get(row.get("status"))
+            severity_score = severity_weights.get(row.get("severity"))
+
+            if status_score is None or severity_score is None:
+                continue
+
+            scores.append(
+                (0.40 * status_score) +
+                (0.60 * severity_score)
+            )
+
+        health_score = _average(scores)
+
+        open_backlog = sum(
+            1
+            for row in rows
+            if row.get("status") in {
+                "New",
+                "Acknowledged",
+                "In Progress",
+            }
+        )
+
+    # -------------------------------------------------------------------------
+    # WORKFLOW STATE
+    # -------------------------------------------------------------------------
+    elif formula_type == "workflow_state":
+        rows = frappe.get_all(
+            doctype,
+            fields=["name", "workflow_state"],
+        )
+
+        weights = {
+            "Draft": 50.0,
+            "Pending Approval": 60.0,
+            "Scheduled": 75.0,
+            "Implemented": 100.0,
+            "Rolled Back": 30.0,
+        }
+
+        health_score = _weighted_average(
+            rows,
+            "workflow_state",
+            weights,
+        )
+
+        open_backlog = sum(
+            1
+            for row in rows
+            if row.get("workflow_state") in {
+                "Draft",
+                "Pending Approval",
+                "Scheduled",
+                "Rolled Back",
+            }
+        )
+
+    # -------------------------------------------------------------------------
+    # STATUS + CRITICALITY
+    # -------------------------------------------------------------------------
+    elif formula_type == "status_criticality":
+        rows = frappe.get_all(
+            doctype,
+            fields=["name", "status", "criticality"],
+        )
+
+        status_weights = {
+            "Planned": 70.0,
+            "Active": 100.0,
+            "Maintenance": 70.0,
+            "Retired": 50.0,
+        }
+
+        criticality_weights = {
+            "Low": 100.0,
+            "Medium": 80.0,
+            "High": 50.0,
+            "Critical": 20.0,
+        }
+
+        scores = []
+
+        for row in rows:
+            status_score = status_weights.get(row.get("status"))
+            criticality_score = criticality_weights.get(
+                row.get("criticality")
+            )
+
+            if status_score is None or criticality_score is None:
+                continue
+
+            scores.append(
+                (0.60 * status_score) +
+                (0.40 * criticality_score)
+            )
+
+        health_score = _average(scores)
+
+        open_backlog = sum(
+            1
+            for row in rows
+            if row.get("status") in {
+                "Planned",
+                "Maintenance",
+            }
+        )
+
+    # -------------------------------------------------------------------------
+    # RISK
+    # -------------------------------------------------------------------------
+    elif formula_type == "risk":
+        rows = frappe.get_all(
+            doctype,
+            fields=[
+                "name",
+                "status",
+                "likelihood",
+                "impact",
+            ],
+        )
+
+        scores = []
+
+        for row in rows:
+            score = _calculate_risk_health(row)
+
+            if score is not None:
+                scores.append(score)
+
+        health_score = _average(scores)
+
+        open_backlog = sum(
+            1
+            for row in rows
+            if row.get("status") in {
+                "Open",
+                "Mitigating",
+                "Accepted",
+            }
+        )
+
+    # -------------------------------------------------------------------------
+    # FINANCIAL
+    # -------------------------------------------------------------------------
+    elif formula_type == "financial":
+        rows = frappe.get_all(
+            doctype,
+            fields=["name", "status"],
+        )
+
+        health_score = _weighted_average(
+            rows,
+            "status",
+            PRACTICE_HEALTH_WEIGHTS["financial"],
+        )
+
+        open_backlog = sum(
+            1
+            for row in rows
+            if row.get("status") in {
+                "Draft",
+                "Planned",
+                "Active",
+                "Reviewed",
+            }
+        )
+
+    # -------------------------------------------------------------------------
+    # SECURITY
+    # -------------------------------------------------------------------------
+    elif formula_type == "security":
+        rows = frappe.get_all(
+            doctype,
+            fields=["name", "risk_level"],
+        )
+
+        health_score = _weighted_average(
+            rows,
+            "risk_level",
+            PRACTICE_HEALTH_WEIGHTS["security"],
+        )
+
+        open_backlog = 0
+
+    # -------------------------------------------------------------------------
+    # ORGANIZATIONAL CHANGE
+    # -------------------------------------------------------------------------
+    elif formula_type == "change":
+        rows = frappe.get_all(
+            doctype,
+            fields=[
+                "name",
+                "status",
+                "impact_level",
+                "readiness_status",
+            ],
+        )
+
+        scores = []
+
+        for row in rows:
+            score = _calculate_change_health(row)
+
+            if score is not None:
+                scores.append(score)
+
+        health_score = _average(scores)
+
+        open_backlog = sum(
+            1
+            for row in rows
+            if row.get("status") not in {
+                "Completed",
+                "Cancelled",
+            }
+        )
+
+    # -------------------------------------------------------------------------
+    # SUPPLIER
+    # -------------------------------------------------------------------------
+    elif formula_type == "supplier":
+        rows = frappe.get_all(
+            doctype,
+            fields=[
+                "name",
+                "status",
+                "service_quality",
+                "risk_level",
+                "performance_status",
+            ],
+        )
+
+        scores = []
+
+        for row in rows:
+            score = _calculate_supplier_health(row)
+
+            if score is not None:
+                scores.append(score)
+
+        health_score = _average(scores)
+
+        open_backlog = sum(
+            1
+            for row in rows
+            if row.get("status") in {
+                "Prospective",
+                "Under Review",
+                "Suspended",
+            }
+        )
+
+    else:
+        raise ValueError(
+            f"Unsupported formula type: {formula_type}"
+        )
+
+    return {
+        "practice": practice_name,
+        "formula_type": formula_type,
+        "doctype": doctype,
+        "record_count": len(rows),
+        "open_backlog": open_backlog,
+        "health_score": flt(
+            min(100.0, max(0.0, health_score)),
+            2,
+        ),
+    }
+
+
+@frappe.whitelist()
+def recalculate_all_practice_health():
+    """
+    Recalculate Health Score and operational backlog for all ITIL Practices
+    using the centralized live metric engine.
+    """
+
+    practices = frappe.get_all(
+        "ITIL Practice",
+        fields=["name", "practice_name"]
+    )
+
+    recalculated_count = 0
+
+    for p in practices:
+        metrics = calculate_practice_live_metrics(p.name)
+
+        doc = frappe.get_doc("ITIL Practice", p.name)
+
+        doc.open_items_count = metrics["open_backlog"]
+        doc.health_score = metrics["health_score"]
+        doc.last_calculated = now_datetime()
+
+        doc.save(ignore_permissions=True)
+
+        recalculated_count += 1
+
+    frappe.db.commit()
+
+    return {
+        "status": "success",
+        "recalculated_count": recalculated_count
+    }
+
+@frappe.whitelist()
+def generate_daily_health_snapshots():
+	"""
+	Daily scheduler job creating historical records in ITIL Practice Health Snapshot.
+	"""
+	practices = frappe.get_all("ITIL Practice", fields=["name", "health_score", "open_items_count", "sla_compliance_pct"])
+	today = getdate()
+	
+	for p in practices:
+		snapshot = frappe.get_doc({
+			"doctype": "ITIL Practice Health Snapshot",
+			"practice": p.name,
+			"snapshot_date": today,
+			"health_score": p.health_score,
+			"open_items_count": p.open_items_count,
+			"sla_compliance_pct": p.sla_compliance_pct
+		})
+		snapshot.insert(ignore_permissions=True)
+	
+	frappe.db.commit()
+
+
+@frappe.whitelist()
+def get_value_stream_graph(value_stream_id=None):
+	"""
+	Returns nodes, edges, transaction counts, lead times, wait times, and Flow Efficiency 
+	for rendering in the Service Value Stream Mapper canvas.
+	"""
+	if not value_stream_id:
+		# Fetch default active Value Stream
+		vs_list = frappe.get_all("ITIL Value Stream Definition", filters={"is_active": 1}, fields=["name", "stream_name"])
+		if not vs_list:
+			return {"error": "No active Value Stream definition found."}
+		value_stream_id = vs_list[0].name
+
+	vs_doc = frappe.get_doc("ITIL Value Stream Definition", value_stream_id)
+	
+	nodes = []
+	for n in vs_doc.nodes:
+		# Calculate real-time node metrics from linked practice DocType
+		open_count = frappe.db.count(n.practice_doctype, filters={"docstatus": 0}) if n.practice_doctype else 0
+		nodes.append({
+			"id": n.node_id,
+			"label": n.step_name,
+			"practice": n.practice,
+			"practice_doctype": n.practice_doctype,
+			"target_process_time_hrs": n.target_process_time_hrs,
+			"target_wait_time_hrs": n.target_wait_time_hrs,
+			"avg_actual_lead_time": n.avg_actual_lead_time or (n.target_process_time_hrs + n.target_wait_time_hrs),
+			"open_count": open_count,
+			"pos_x": n.pos_x,
+			"pos_y": n.pos_y
+		})
+
+	edges = []
+	for e in vs_doc.edges:
+		edges.append({
+			"id": e.name,
+			"source": e.source_node_id,
+			"target": e.target_node_id,
+			"label": e.edge_label,
+			"auto_trigger": e.auto_trigger_action
+		})
+
+	# Calculate aggregate Lean metrics
+	total_process_time = sum(n["target_process_time_hrs"] for n in nodes) or 1
+	total_lead_time = sum(n["avg_actual_lead_time"] for n in nodes) or 1
+	flow_efficiency = flt((total_process_time / total_lead_time) * 100, 2)
+
+	return {
+		"value_stream": {
+			"name": vs_doc.name,
+			"stream_name": vs_doc.stream_name,
+			"trigger_condition": vs_doc.trigger_condition,
+			"target_outcome": vs_doc.target_outcome,
+			"flow_efficiency": flow_efficiency,
+			"total_lead_time_hrs": total_lead_time,
+			"total_process_time_hrs": total_process_time,
+			"total_wait_time_hrs": flt(total_lead_time - total_process_time, 2)
+		},
+		"nodes": nodes,
+		"edges": edges
+	}
+
+
+# --- Event Hooks for Auto-Linking Cross-Practice Artifacts ---
+
+def on_incident_update(doc, method):
+        """
+        Auto-link Incident to Problem when applicable and immediately
+        synchronize the Incident Management practice backlog.
+        """
+
+        # Existing cross-practice link logic
+        linked_problem = getattr(doc, "linked_problem", None)
+
+        if linked_problem:
+                _create_practice_link(
+                        source_doctype="ITIL Incident",
+                        source_name=doc.name,
+                        target_doctype="ITIL Problem",
+                        target_name=linked_problem,
+                        link_type="Caused By / Investigated Via"
+                )
+
+        # Immediately synchronize Incident Management backlog
+        practice_name = frappe.db.get_value(
+                "ITIL Practice",
+                {"doctype_reference": "ITIL Incident"},
+                "name"
+        )
+
+        if practice_name:
+                practice = frappe.get_doc(
+                        "ITIL Practice",
+                        practice_name
+                )
+
+                metrics = calculate_practice_live_metrics(
+                        practice.practice_name
+                )
+
+                practice.open_items_count = metrics["open_backlog"]
+                practice.health_score = metrics["health_score"]
+                practice.last_calculated = now_datetime()
+
+                practice.save(ignore_permissions=True)
+
+        frappe.db.commit()
+
+def on_problem_update(doc, method):
+        """
+        Auto-link Problem to Change Request when the linked_change_request
+        field exists and contains a value, then synchronize the
+        Problem Management practice health.
+        """
+        linked_change_request = getattr(
+                doc,
+                "linked_change_request",
+                None
+        )
+
+        if linked_change_request:
+                _create_practice_link(
+                        source_doctype="ITIL Problem",
+                        source_name=doc.name,
+                        target_doctype="ITIL Change Request",
+                        target_name=linked_change_request,
+                        link_type="Resolved Via Change"
+                )
+
+        practice_name = frappe.db.get_value(
+                "ITIL Practice",
+                {"doctype_reference": "ITIL Problem"},
+                "name"
+        )
+
+        if practice_name:
+                practice = frappe.get_doc(
+                        "ITIL Practice",
+                        practice_name
+                )
+
+                metrics = calculate_practice_live_metrics(
+                        practice.practice_name
+                )
+
+                practice.open_items_count = metrics["open_backlog"]
+                practice.health_score = metrics["health_score"]
+                practice.last_calculated = now_datetime()
+
+                practice.save(ignore_permissions=True)
+
+        frappe.db.commit()
+
+
+def on_change_update(doc, method):
+        """
+        Auto-link Change Request to Deployment Log when the Change Request
+        has been implemented and a deployment_log field exists, then
+        synchronize the Release Management practice health.
+        """
+        deployment_log = getattr(
+                doc,
+                "deployment_log",
+                None
+        )
+
+        if doc.workflow_state == "Implemented" and deployment_log:
+                _create_practice_link(
+                        source_doctype="ITIL Change Request",
+                        source_name=doc.name,
+                        target_doctype="ITIL Deployment Log",
+                        target_name=deployment_log,
+                        link_type="Deployed Via"
+                )
+
+        practice_name = frappe.db.get_value(
+                "ITIL Practice",
+                {"doctype_reference": "ITIL Change Request"},
+                "name"
+        )
+
+        if not practice_name:
+                practice_name = frappe.db.get_value(
+                        "ITIL Practice",
+                        {"practice_name": "Release Management"},
+                        "name"
+                )
+
+        if practice_name:
+                practice = frappe.get_doc(
+                        "ITIL Practice",
+                        practice_name
+                )
+
+                metrics = calculate_practice_live_metrics(
+                        practice.practice_name
+                )
+
+                practice.open_items_count = metrics["open_backlog"]
+                practice.health_score = metrics["health_score"]
+                practice.last_calculated = now_datetime()
+
+                practice.save(ignore_permissions=True)
+
+        frappe.db.commit()
+
+
+def on_deployment_submit(doc, method):
+        """
+        Complete Value Stream transaction execution cycle when Deployment Log
+        is submitted, then synchronize Deployment Management practice health.
+        """
+        change_request = getattr(
+                doc,
+                "change_request",
+                None
+        )
+
+        if change_request:
+                frappe.db.set_value(
+                        "ITIL Change Request",
+                        change_request,
+                        "workflow_state",
+                        "Implemented"
+                )
+
+        practice_name = frappe.db.get_value(
+                "ITIL Practice",
+                {"doctype_reference": "ITIL Deployment Log"},
+                "name"
+        )
+
+        if practice_name:
+                practice = frappe.get_doc(
+                        "ITIL Practice",
+                        practice_name
+                )
+
+                metrics = calculate_practice_live_metrics(
+                        practice.practice_name
+                )
+
+                practice.open_items_count = metrics["open_backlog"]
+                practice.health_score = metrics["health_score"]
+                practice.last_calculated = now_datetime()
+
+                practice.save(ignore_permissions=True)
+
+        # Immediately synchronize Release Management because
+        # deployment submission changes the related Change Request
+        # workflow_state to Implemented.
+        release_practice_name = frappe.db.get_value(
+                "ITIL Practice",
+                {"practice_name": "Release Management"},
+                "name"
+        )
+
+        if release_practice_name:
+                release_practice = frappe.get_doc(
+                        "ITIL Practice",
+                        release_practice_name
+                )
+
+                release_metrics = calculate_practice_live_metrics(
+                        release_practice.practice_name
+                )
+
+                release_practice.open_items_count = (
+                        release_metrics["open_backlog"]
+                )
+                release_practice.health_score = (
+                        release_metrics["health_score"]
+                )
+                release_practice.last_calculated = now_datetime()
+
+                release_practice.save(
+                        ignore_permissions=True
+                )
+
+        frappe.db.commit()
+
+
+def _create_practice_link(source_doctype, source_name, target_doctype, target_name, link_type):
+	exists = frappe.db.exists("ITIL Practice Link", {
+		"source_doctype": source_doctype,
+		"source_name": source_name,
+		"target_doctype": target_doctype,
+		"target_name": target_name
+	})
+	if not exists:
+		link = frappe.get_doc({
+			"doctype": "ITIL Practice Link",
+			"source_doctype": source_doctype,
+			"source_name": source_name,
+			"target_doctype": target_doctype,
+			"target_name": target_name,
+			"link_type": link_type,
+			"created_on": now_datetime()
+		})
+		link.insert(ignore_permissions=True)
+
+
+@frappe.whitelist()
+def set_redirect_after_login(login_manager=None):
+    """
+    Sets the redirect destination after successful login to ITIL Master Dashboard.
+    """
+    target = "/app/itil-master-dashboard"
+    user = login_manager.user if login_manager else frappe.session.user
+    if user:
+        frappe.cache.hset("redirect_after_login", user, target)
+    frappe.local.response["home_page"] = target
+    frappe.local.response["redirect_to"] = target

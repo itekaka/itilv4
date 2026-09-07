@@ -1,0 +1,126 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "ARC-.#####",
+ "creation": "2026-08-31 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "architecture_information_section",
+  "architecture_name",
+  "status",
+  "architecture_type",
+  "owner",
+  "description",
+  "architecture_scope_section",
+  "business_capability",
+  "technology_domain",
+  "target_state",
+  "architecture_governance_section",
+  "principles",
+  "risks",
+  "review_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "architecture_information_section",
+   "fieldtype": "Section Break",
+   "label": "Architecture Information"
+  },
+  {
+   "fieldname": "architecture_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Architecture Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nActive\nUnder Review\nRetired",
+   "default": "Draft"
+  },
+  {
+   "fieldname": "architecture_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Architecture Type",
+   "options": "Enterprise\nBusiness\nInformation\nApplication\nTechnology\nSecurity"
+  },
+  {
+   "fieldname": "owner",
+   "fieldtype": "Link",
+   "label": "Architecture Owner",
+   "options": "User"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "architecture_scope_section",
+   "fieldtype": "Section Break",
+   "label": "Architecture Scope"
+  },
+  {
+   "fieldname": "business_capability",
+   "fieldtype": "Data",
+   "label": "Business Capability"
+  },
+  {
+   "fieldname": "technology_domain",
+   "fieldtype": "Data",
+   "label": "Technology Domain"
+  },
+  {
+   "fieldname": "target_state",
+   "fieldtype": "Text Editor",
+   "label": "Target State"
+  },
+  {
+   "fieldname": "architecture_governance_section",
+   "fieldtype": "Section Break",
+   "label": "Architecture Governance"
+  },
+  {
+   "fieldname": "principles",
+   "fieldtype": "Text Editor",
+   "label": "Architecture Principles"
+  },
+  {
+   "fieldname": "risks",
+   "fieldtype": "Text Editor",
+   "label": "Architecture Risks"
+  },
+  {
+   "fieldname": "review_date",
+   "fieldtype": "Date",
+   "label": "Next Review Date"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "module": "Architecture Management",
+ "name": "ITIL Architecture Management",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

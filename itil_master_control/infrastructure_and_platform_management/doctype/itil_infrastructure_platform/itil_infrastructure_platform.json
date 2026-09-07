@@ -1,0 +1,98 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "INF-.#####",
+  "creation": "2026-08-31 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "infrastructure_information_section",
+    "infrastructure_name",
+    "status",
+    "infrastructure_type",
+    "environment",
+    "owner",
+    "criticality",
+    "location",
+    "description"
+  ],
+  "fields": [
+    {
+      "fieldname": "infrastructure_information_section",
+      "fieldtype": "Section Break",
+      "label": "Infrastructure Information"
+    },
+    {
+      "fieldname": "infrastructure_name",
+      "fieldtype": "Data",
+      "label": "Infrastructure Name",
+      "in_list_view": 1,
+      "reqd": 1
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "Planned\nActive\nMaintenance\nRetired",
+      "default": "Planned",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "infrastructure_type",
+      "fieldtype": "Select",
+      "label": "Infrastructure Type",
+      "options": "Server\nNetwork\nStorage\nCloud\nPlatform\nDatabase\nOther"
+    },
+    {
+      "fieldname": "environment",
+      "fieldtype": "Select",
+      "label": "Environment",
+      "options": "Production\nUAT\nDevelopment\nTest\nDisaster Recovery\nOther"
+    },
+    {
+      "fieldname": "owner",
+      "fieldtype": "Link",
+      "label": "Owner",
+      "options": "User"
+    },
+    {
+      "fieldname": "criticality",
+      "fieldtype": "Select",
+      "label": "Criticality",
+      "options": "Low\nMedium\nHigh\nCritical",
+      "default": "Medium"
+    },
+    {
+      "fieldname": "location",
+      "fieldtype": "Data",
+      "label": "Location"
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Text Editor",
+      "label": "Description"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "module": "Infrastructure and Platform Management",
+  "name": "ITIL Infrastructure Platform",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
+}

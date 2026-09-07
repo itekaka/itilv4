@@ -1,0 +1,105 @@
+frappe.provide('frappe.itil_master_control');
+
+frappe.itil_master_control.render_dashboard = function (wrapper) {
+    // 1. Buat wadah utama dasbor di halaman web
+    const container = $(wrapper).find('#itil4-master-control-panel');
+    container.html('<div class="itil-dashboard-grid"></div>');
+    const grid = container.find('.itil-dashboard-grid');
+
+    // 2. Data 24 Praktik ITIL 4 berdasarkan 4 Dimensi (Sesuai Gambar Laptop Anda)
+    const practices = [
+        // --- 1. Organizations & People ---
+        { name: "Organizational Change Management", dimension: "op", score: "95/100", info: "Adoptions: 60%", trend: "up" },
+        { name: "Talent Management", dimension: "op", score: "95/100", info: "Skills matrix updated", trend: "up" },
+        { name: "Workforce Planning", dimension: "op", score: "95/100", info: "Resource utilization: 88%", trend: "up" },
+        { name: "Continual Improvement", dimension: "op", score: "3 active", info: "3 active initiatives", trend: "down" },
+
+        // --- 2. Information & Technology ---
+        { name: "Information Security Management", dimension: "it", score: "Secured", info: "0 Incidents pending", trend: "up", status: "secured" },
+        { name: "Architecture Management", dimension: "it", score: "95/100", info: "Tech stack baseline set", trend: "down" },
+        { name: "IT Asset Management", dimension: "it", score: "95/100", info: "546 Assets, 96% complianes", trend: "up" },
+        { name: "Software Development & Management", dimension: "it", score: "95/100", info: "2 active DevOps pipelines", trend: "down" },
+        { name: "Monitoring & Event Mgmt", dimension: "it", score: "Stable", info: "5 Active Events logs", trend: "up", status: "stable" },
+
+        // --- 3. Partners & Suppliers ---
+        { name: "Supplier Management", dimension: "ps", score: "95/100", info: "2 contracts expiring soon", trend: "down", status: "amber" },
+        { name: "Service Financial Management", dimension: "ps", score: "Budget 75%", info: "Budget utilization 75%", trend: "up" },
+
+        // --- 4. Value Streams & Processes ---
+        { name: "Incident Management", dimension: "vsp", score: "55/100", info: "Open: 12, Major: 1", trend: "down", status: "critical" },
+        { name: "Problem Management", dimension: "vsp", score: "95/100", info: "Root Cause Analysis: 3", trend: "up" },
+        { name: "Service Request Management", dimension: "vsp", score: "2.5 days", info: "Avg Fulfillment: 2.5 days", trend: "up" },
+        { name: "Change Enablement", dimension: "vsp", score: "55/100", info: "Pending Approval: 5", trend: "down" },
+        { name: "Service Level Management", dimension: "vsp", score: "99.1/100", info: "Overall SLA: 99.8%", trend: "down" },
+        { name: "Service Continuity Management", dimension: "vsp", score: "95/100", info: "DR Plan verified", trend: "up" },
+        { name: "Service Design", dimension: "vsp", score: "95/100", info: "Catalog updated", trend: "down" },
+        { name: "Service Validation & Testing", dimension: "vsp", score: "91/100", info: "QA Success: 94%", trend: "up" },
+        { name: "Deployment Management", dimension: "vsp", score: "39/100", info: "Automated deploys", trend: "down" },
+        { name: "Risk Management", dimension: "vsp", score: "95/100", info: "Registry verified", trend: "up" },
+        { name: "Knowledge Management", dimension: "vsp", score: "95/100", info: "12 new KBs created", trend: "down" },
+        { name: "Measurement & Reporting", dimension: "vsp", score: "95/100", info: "KPI reports generated", trend: "up" },
+        { name: "Project Management", dimension: "vsp", score: "95/100", info: "PMO alignment verified", trend: "up" }
+    ];
+
+    // 3. Loop data di atas untuk dijadikan elemen kotak visual di layar
+    practices.forEach(p => {
+        let cardHtml = `
+            <div class="itil-card category-${p.dimension} status-${p.status || 'normal'}">
+                <div class="itil-card-title">${p.name}</div>
+                <div class="itil-card-sparkline">📈</div>
+                <div class="itil-card-footer">
+                    <span class="itil-card-score">Health Score: <b>${p.score}</b></span>
+                    <span class="itil-card-trend">${p.trend === 'up' ? '▲' : '▼'}</span>
+                </div>
+                <div class="itil-card-subinfo">${p.info}</div>
+            </div>
+        `;
+        grid.append(cardHtml);
+    });
+};
+```javascript
+// ============================================================
+// ITIL 4 MASTER CONTROL WORKSPACE INTEGRATION
+// ============================================================
+
+frappe.router.on('change', function () {
+    setTimeout(function () {
+
+        // Pastikan hanya berjalan pada Workspace ITIL 4 Master Control
+        if (frappe.get_route_str() !== 'workspace/ITIL 4 Master Control') {
+            return;
+        }
+
+        // Cari area utama Workspace
+        const workspace = $('.desk-page');
+
+        if (!workspace.length) {
+            return;
+        }
+
+        // Hindari render berulang
+        if ($('#itil4-master-control-panel').length) {
+            return;
+        }
+
+        // Cari container Workspace Frappe
+        const pageContent = workspace.find('.page-content');
+
+        if (!pageContent.length) {
+            return;
+        }
+
+        // Kosongkan konten Workspace standar
+        pageContent.empty();
+
+        // Buat container dashboard
+        pageContent.append(`
+    < div id = "itil4-master-control-panel" ></div >
+        `);
+
+        // Render ITIL Dashboard
+        frappe.itil_master_control.render_dashboard(pageContent);
+
+    }, 500);
+});
+```

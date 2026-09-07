@@ -1,0 +1,89 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "deployment_title",
+  "change_request",
+  "status",
+  "column_break_1",
+  "deployment_environment",
+  "deployment_date",
+  "section_details",
+  "deployment_notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "deployment_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Deployment Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "change_request",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Change Request",
+   "options": "ITIL Change Request"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Planned\nIn Progress\nSuccessful\nFailed\nRolled Back",
+   "default": "Planned"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "deployment_environment",
+   "fieldtype": "Select",
+   "label": "Deployment Environment",
+   "options": "Development\nTest\nStaging\nProduction",
+   "default": "Development"
+  },
+  {
+   "fieldname": "deployment_date",
+   "fieldtype": "Datetime",
+   "label": "Deployment Date"
+  },
+  {
+   "fieldname": "section_details",
+   "fieldtype": "Section Break",
+   "label": "Deployment Details"
+  },
+  {
+   "fieldname": "deployment_notes",
+   "fieldtype": "Text",
+   "label": "Deployment Notes"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "module": "Deployment Management",
+ "name": "ITIL Deployment Log",
+ "naming_rule": "Expression",
+ "autoname": "DPL-.#####",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

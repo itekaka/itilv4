@@ -1,0 +1,27 @@
+ITIL Core
+Configuration Management
+Service Desk
+Problem Management
+Change Enablement
+Measurement and Reporting
+Project Management
+Risk Management
+Service Financial Management
+Information Security Management
+Architecture Management
+Knowledge Management
+Organizational Change Management
+Supplier Management
+Incident Management
+IT Asset Management
+Monitoring and Event Management
+Service Validation and Testing
+Service Continuity Management
+Service Catalogue Management
+Release Management
+Service Design
+Service Level Management
+Service Request Management
+Deployment Management
+Software Development and Management
+Infrastructure and Platform Management

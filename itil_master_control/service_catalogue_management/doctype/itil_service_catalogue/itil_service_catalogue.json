@@ -1,0 +1,86 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SVC-.#####",
+ "creation": "2026-08-31 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "service_information_section",
+  "service_name",
+  "status",
+  "service_owner",
+  "description",
+  "service_level_section",
+  "service_level",
+  "business_value"
+ ],
+ "fields": [
+  {
+   "fieldname": "service_information_section",
+   "fieldtype": "Section Break",
+   "label": "Service Information"
+  },
+  {
+   "fieldname": "service_name",
+   "fieldtype": "Data",
+   "label": "Service Name",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nPublished\nRetired",
+   "default": "Draft"
+  },
+  {
+   "fieldname": "service_owner",
+   "fieldtype": "Link",
+   "label": "Service Owner",
+   "options": "User"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description"
+  },
+  {
+   "fieldname": "service_level_section",
+   "fieldtype": "Section Break",
+   "label": "Service Levels"
+  },
+  {
+   "fieldname": "service_level",
+   "fieldtype": "Data",
+   "label": "Service Level"
+  },
+  {
+   "fieldname": "business_value",
+   "fieldtype": "Small Text",
+   "label": "Business Value"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "module": "Service Catalogue Management",
+ "name": "ITIL Service Catalogue",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

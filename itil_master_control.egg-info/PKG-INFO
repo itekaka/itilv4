@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: itil_master_control
+Version: 1.0.0
+Summary: ITIL 4 Master Control Panel - Enterprise ITSM & Service Value Stream Mapper built on Frappe Framework
+Author: ITIL Master Team
+Author-email: dev@itilmaster.local
+Requires-Dist: frappe
+Dynamic: author
+Dynamic: author-email
+Dynamic: requires-dist
+Dynamic: summary

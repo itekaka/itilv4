@@ -1,0 +1,17 @@
+{
+    "actions": [],
+    "creation": "2026-08-21 08:00:00.000000",
+    "doctype": "Page",
+    "idx": 0,
+    "modified": "2026-08-21 08:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "ITIL Core",
+    "name": "itil-master-dashboard",
+    "owner": "Administrator",
+    "page_name": "itil-master-dashboard",
+    "roles": [],
+    "script": "",
+    "style": "",
+    "system_page": 0,
+    "title": "ITIL Master Dashboard"
+}

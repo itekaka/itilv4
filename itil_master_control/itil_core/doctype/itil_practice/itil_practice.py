@@ -1,0 +1,59 @@
+import frappe
+from frappe import _
+from frappe.model.document import Document
+from frappe import scrub
+from frappe.utils import flt
+
+class ITILPractice(Document):
+	def validate(self):
+		self.ensure_slug()
+		self.validate_slug_uniqueness()
+
+	def ensure_slug(self):
+		"""
+		Generates practice_slug from practice_name ONLY if practice_slug is empty.
+		Preserves existing persisted slugs when practice_name changes.
+		"""
+		if not self.practice_slug and self.practice_name:
+			self.practice_slug = scrub(self.practice_name).replace("_", "-")
+
+	def validate_slug_uniqueness(self):
+		"""
+		Validates that practice_slug is unique across ITIL Practice records.
+		"""
+		if not self.practice_slug:
+			return
+
+		existing = frappe.db.get_value(
+			"ITIL Practice",
+			{"practice_slug": self.practice_slug, "name": ["!=", self.name or ""]},
+			"name"
+		)
+		if existing:
+			frappe.throw(
+				_("Practice Slug '{0}' is already used by practice '{1}'.").format(
+					self.practice_slug, existing
+				),
+				frappe.ValidationError
+			)
+
+	
+		"""
+		Calculate dynamic Health Score based on SLA Compliance and open item backlog.
+		Formula: Health = (0.6 * SLA_Compliance) + (0.4 * Backlog_Score)
+		"""
+		sla_pct = flt(self.sla_compliance_pct or 100.0)
+		
+		# Backlog penalty calculation
+		backlog = flt(self.open_items_count or 0)
+		if backlog <= 10:
+			backlog_score = 100.0
+		elif backlog <= 50:
+			backlog_score = 85.0
+		elif backlog <= 100:
+			backlog_score = 70.0
+		else:
+			backlog_score = 50.0
+
+		health = flt((0.6 * sla_pct) + (0.4 * backlog_score), 2)
+		return min(100.0, max(0.0, health))
