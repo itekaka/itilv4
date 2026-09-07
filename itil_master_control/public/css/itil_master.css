@@ -14,7 +14,7 @@
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     padding: 15px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -51,8 +51,22 @@
 }
 
 /* Pewarnaan Status Indikator Sesuai Gambar Referensi Anda */
-.status-secured .itil-card-score b { color: #10b981; }
-.status-stable .itil-card-score b { color: #06b6d4; }
-.status-amber { border-left: 4px solid #f59e0b; }
-.status-critical { border-left: 4px solid #ef4444; }
-.status-critical .itil-card-score b { color: #ef4444; }
+.status-secured .itil-card-score b {
+    color: #10b981;
+}
+
+.status-stable .itil-card-score b {
+    color: #06b6d4;
+}
+
+.status-amber {
+    border-left: 4px solid #f59e0b;
+}
+
+.status-critical {
+    border-left: 4px solid #ef4444;
+}
+
+.status-critical .itil-card-score b {
+    color: #ef4444;
+}

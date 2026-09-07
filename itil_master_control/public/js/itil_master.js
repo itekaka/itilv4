@@ -150,3 +150,27 @@ frappe.router.on("change", function () {
 
     }, 500);
 });
+
+// Matikan logo Frappe secara otomatis
+function killFrappeLogo() {
+    const logo = document.querySelector('a.navbar-brand.navbar-home');
+    if (logo) {
+        logo.removeAttribute('href');
+        logo.style.pointerEvents = 'none';
+        logo.style.cursor = 'default';
+        logo.onclick = function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            return false;
+        };
+    }
+}
+
+// Jalankan setelah Frappe siap
+frappe.ready(function () {
+    killFrappeLogo();
+    // Jaga-jaga kalau navbar di-render ulang
+    setTimeout(killFrappeLogo, 500);
+    setTimeout(killFrappeLogo, 1500);
+    setInterval(killFrappeLogo, 2000);
+});

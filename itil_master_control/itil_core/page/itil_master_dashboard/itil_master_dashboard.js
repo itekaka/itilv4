@@ -4,6 +4,13 @@ frappe.pages['itil-master-dashboard'].on_page_load = function (wrapper) {
         title: __(''),
         single_column: true
     });
+    // Custom breadcrumb → mengarah ke dashboard ini (bukan ke workspace lama)
+    frappe.breadcrumbs.clear();
+    frappe.breadcrumbs.add({
+        type: 'Custom',
+        label: __('ITIL 4 Master Control'),
+        route: '/app/itil-master-dashboard'
+    });
 
     const $wrapper = $(wrapper);
     $wrapper.find(".page-head").hide();

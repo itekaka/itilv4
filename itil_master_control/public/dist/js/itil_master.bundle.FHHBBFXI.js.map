@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../../apps/itil_master_control/itil_master_control/public/js/itil_master.bundle.js"],
-  "sourcesContent": ["/* ITIL 4 Master Control Panel - Desk Initialization Script */\n\nconsole.log(\"[ITIL Master Control] Initializing Desk Assets & Control Plane v1.0.0...\");\n\nfrappe.provide(\"frappe.itil_master_control\");\n\nfrappe.itil_master_control = {\n\tinit: function() {\n\t\tconsole.log(\"[ITIL Master Control] Core Suite Loaded Successfully.\");\n\t},\n\n\topen_value_stream_mapper: function() {\n\t\tfrappe.set_route(\"service-value-stream-mapper\");\n\t}\n};\n\n$(document).on(\"app_ready\", function() {\n\tfrappe.itil_master_control.init();\n});\n"],
-  "mappings": ";;AAEA,UAAQ,IAAI,0EAA0E;AAEtF,SAAO,QAAQ,4BAA4B;AAE3C,SAAO,sBAAsB;AAAA,IAC5B,MAAM,WAAW;AAChB,cAAQ,IAAI,uDAAuD;AAAA,IACpE;AAAA,IAEA,0BAA0B,WAAW;AACpC,aAAO,UAAU,6BAA6B;AAAA,IAC/C;AAAA,EACD;AAEA,IAAE,QAAQ,EAAE,GAAG,aAAa,WAAW;AACtC,WAAO,oBAAoB,KAAK;AAAA,EACjC,CAAC;",
-  "names": []
-}
