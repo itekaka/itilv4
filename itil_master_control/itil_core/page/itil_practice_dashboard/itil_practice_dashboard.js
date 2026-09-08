@@ -1,4 +1,4 @@
-frappe.pages['itil-practice-dashboard'].on_page_load = function(wrapper) {
+frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 	var page = frappe.ui.make_app_page({
 		parent: wrapper,
 		title: __('ITIL Practice Dashboard'),
@@ -23,14 +23,15 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function(wrapper) {
 	function load_practice_dashboard() {
 		var practice_param = get_selected_practice();
 		if (!practice_param) {
-			render_error("No practice parameter provided. Please select a practice from the ITIL Master Dashboard.");
+			// Tidak ada practice di URL → kembali ke Master Dashboard
+			frappe.set_route("itil-master-dashboard");
 			return;
 		}
 
 		frappe.call({
 			method: 'itil_master_control.practice_registry.get_practice_definition',
 			args: { practice: practice_param },
-			callback: function(r) {
+			callback: function (r) {
 				if (r.message && !r.message.error) {
 					render_dashboard(r.message.practice, r.message.recent_records);
 				} else {
@@ -171,10 +172,10 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function(wrapper) {
 		bind_nav_events();
 
 		if (has_doctype) {
-			$('#btn-open-list').on('click', function() {
+			$('#btn-open-list').on('click', function () {
 				frappe.set_route('List', doctype_ref);
 			});
-			$('#btn-create-record').on('click', function() {
+			$('#btn-create-record').on('click', function () {
 				frappe.new_doc(doctype_ref);
 			});
 		}
@@ -193,11 +194,11 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function(wrapper) {
 		frappe.require([
 			'assets/frappe/node_modules/frappe-gantt/dist/frappe-gantt.css',
 			'assets/frappe/node_modules/frappe-gantt/dist/frappe-gantt.min.js'
-		], function() {
+		], function () {
 			load_gantt_data();
 		});
 
-		$('#btn-refresh-gantt').on('click', function() {
+		$('#btn-refresh-gantt').on('click', function () {
 			load_gantt_data();
 		});
 	}
@@ -215,7 +216,7 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function(wrapper) {
 
 		frappe.call({
 			method: 'itil_master_control.project_management.api.get_project_gantt_data',
-			callback: function(r) {
+			callback: function (r) {
 				if (r.message && r.message.projects) {
 					render_gantt_chart(r.message.projects);
 				} else if (r.exc) {
@@ -232,7 +233,7 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function(wrapper) {
 					`);
 				}
 			},
-			error: function() {
+			error: function () {
 				$container.html(`
 					<div class="itil-gantt-error alert alert-danger m-3">
 						Failed to load project timeline data from server.
@@ -255,7 +256,7 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function(wrapper) {
 			return;
 		}
 
-		var tasks = projects.map(function(p) {
+		var tasks = projects.map(function (p) {
 			return {
 				id: p.id,
 				name: p.project_name || p.name,
@@ -297,10 +298,10 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function(wrapper) {
 				view_mode: current_view_mode,
 				date_format: 'YYYY-MM-DD',
 				popup_trigger: 'click',
-				on_click: function(task) {
+				on_click: function (task) {
 					frappe.set_route('Form', 'ITIL Project', task.id);
 				},
-				custom_popup_html: function(task) {
+				custom_popup_html: function (task) {
 					var p = task._meta || {};
 					var status_badge = frappe.utils.escape_html(p.status || 'Planning');
 					var manager = p.project_manager ? `<div class="gantt-pop-row"><strong>Manager:</strong> ${frappe.utils.escape_html(p.project_manager)}</div>` : '';
@@ -323,7 +324,7 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function(wrapper) {
 			});
 
 			// Bind view mode switch buttons
-			$('.btn-gantt-view').off('click').on('click', function() {
+			$('.btn-gantt-view').off('click').on('click', function () {
 				var mode = $(this).attr('data-mode');
 				$('.btn-gantt-view').removeClass('active btn-info').addClass('btn-default');
 				$(this).addClass('active btn-info').removeClass('btn-default');
@@ -347,7 +348,7 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function(wrapper) {
 		if (!records || records.length === 0) {
 			return `<div class="itil-pd-empty-state">No recent ${frappe.utils.escape_html(doctype_ref)} records found.</div>`;
 		}
-		var rows = records.map(function(r) {
+		var rows = records.map(function (r) {
 			return `
 				<tr>
 					<td><a class="itil-pd-link" data-doctype="${frappe.utils.escape_html(doctype_ref)}" data-name="${frappe.utils.escape_html(r.name)}">${frappe.utils.escape_html(r.name)}</a></td>
@@ -383,13 +384,13 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function(wrapper) {
 	}
 
 	function bind_nav_events() {
-		$('#btn-back-master, #btn-go-master').on('click', function() {
+		$('#btn-back-master, #btn-go-master').on('click', function () {
 			frappe.set_route('itil-master-dashboard');
 		});
-		$('#btn-open-vsm').on('click', function() {
+		$('#btn-open-vsm').on('click', function () {
 			frappe.set_route('service-value-stream-mapper');
 		});
-		page.main.find('.itil-pd-link').on('click', function() {
+		page.main.find('.itil-pd-link').on('click', function () {
 			var dt = $(this).attr('data-doctype');
 			var name = $(this).attr('data-name');
 			frappe.set_route('Form', dt, name);
@@ -397,7 +398,7 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function(wrapper) {
 	}
 
 	// Trigger load on page show
-	$(wrapper).on('show', function() {
+	$(wrapper).on('show', function () {
 		load_practice_dashboard();
 	});
 
