@@ -1114,221 +1114,124 @@ def get_value_stream_graph(value_stream_id=None):
 
 # --- Event Hooks for Auto-Linking Cross-Practice Artifacts ---
 
-def on_incident_update(doc, method):
-        """
-        Auto-link Incident to Problem when applicable and immediately
-        synchronize the Incident Management practice backlog.
-        """
+def sync_practice_by_doctype(doctype):
+	"""
+	Realtime sync: recalculate open_backlog + health_score
+	for ALL ITIL Practice records that reference this DocType.
+	"""
+	if not doctype:
+		return
 
-        # Existing cross-practice link logic
-        linked_problem = getattr(doc, "linked_problem", None)
+	practices = frappe.get_all(
+		"ITIL Practice",
+		filters={"doctype_reference": doctype, "is_active": 1},
+		fields=["name", "practice_name"],
+	)
 
-        if linked_problem:
-                _create_practice_link(
-                        source_doctype="ITIL Incident",
-                        source_name=doc.name,
-                        target_doctype="ITIL Problem",
-                        target_name=linked_problem,
-                        link_type="Caused By / Investigated Via"
-                )
+	for p in practices:
+		try:
+			metrics = calculate_practice_live_metrics(p.practice_name)
+			practice = frappe.get_doc("ITIL Practice", p.name)
+			practice.open_items_count = metrics["open_backlog"]
+			practice.health_score = metrics["health_score"]
+			practice.last_calculated = now_datetime()
+			practice.save(ignore_permissions=True)
+		except Exception:
+			frappe.log_error(
+				title=f"ITIL Practice sync failed for {p.practice_name}",
+				message=frappe.get_traceback(),
+			)
 
-        # Immediately synchronize Incident Management backlog
-        practice_name = frappe.db.get_value(
-                "ITIL Practice",
-                {"doctype_reference": "ITIL Incident"},
-                "name"
-        )
-
-        if practice_name:
-                practice = frappe.get_doc(
-                        "ITIL Practice",
-                        practice_name
-                )
-
-                metrics = calculate_practice_live_metrics(
-                        practice.practice_name
-                )
-
-                practice.open_items_count = metrics["open_backlog"]
-                practice.health_score = metrics["health_score"]
-                practice.last_calculated = now_datetime()
-
-                practice.save(ignore_permissions=True)
-
-        frappe.db.commit()
-
-def on_problem_update(doc, method):
-        """
-        Auto-link Problem to Change Request when the linked_change_request
-        field exists and contains a value, then synchronize the
-        Problem Management practice health.
-        """
-        linked_change_request = getattr(
-                doc,
-                "linked_change_request",
-                None
-        )
-
-        if linked_change_request:
-                _create_practice_link(
-                        source_doctype="ITIL Problem",
-                        source_name=doc.name,
-                        target_doctype="ITIL Change Request",
-                        target_name=linked_change_request,
-                        link_type="Resolved Via Change"
-                )
-
-        practice_name = frappe.db.get_value(
-                "ITIL Practice",
-                {"doctype_reference": "ITIL Problem"},
-                "name"
-        )
-
-        if practice_name:
-                practice = frappe.get_doc(
-                        "ITIL Practice",
-                        practice_name
-                )
-
-                metrics = calculate_practice_live_metrics(
-                        practice.practice_name
-                )
-
-                practice.open_items_count = metrics["open_backlog"]
-                practice.health_score = metrics["health_score"]
-                practice.last_calculated = now_datetime()
-
-                practice.save(ignore_permissions=True)
-
-        frappe.db.commit()
+	if practices:
+		frappe.db.commit()
 
 
-def on_change_update(doc, method):
-        """
-        Auto-link Change Request to Deployment Log when the Change Request
-        has been implemented and a deployment_log field exists, then
-        synchronize the Release Management practice health.
-        """
-        deployment_log = getattr(
-                doc,
-                "deployment_log",
-                None
-        )
-
-        if doc.workflow_state == "Implemented" and deployment_log:
-                _create_practice_link(
-                        source_doctype="ITIL Change Request",
-                        source_name=doc.name,
-                        target_doctype="ITIL Deployment Log",
-                        target_name=deployment_log,
-                        link_type="Deployed Via"
-                )
-
-        practice_name = frappe.db.get_value(
-                "ITIL Practice",
-                {"doctype_reference": "ITIL Change Request"},
-                "name"
-        )
-
-        if not practice_name:
-                practice_name = frappe.db.get_value(
-                        "ITIL Practice",
-                        {"practice_name": "Release Management"},
-                        "name"
-                )
-
-        if practice_name:
-                practice = frappe.get_doc(
-                        "ITIL Practice",
-                        practice_name
-                )
-
-                metrics = calculate_practice_live_metrics(
-                        practice.practice_name
-                )
-
-                practice.open_items_count = metrics["open_backlog"]
-                practice.health_score = metrics["health_score"]
-                practice.last_calculated = now_datetime()
-
-                practice.save(ignore_permissions=True)
-
-        frappe.db.commit()
+def on_operational_doc_change(doc, method=None):
+	"""
+	Generic realtime handler for all operational ITIL DocTypes.
+	Triggered on after_insert / on_update / after_delete.
+	"""
+	sync_practice_by_doctype(doc.doctype)
 
 
-def on_deployment_submit(doc, method):
-        """
-        Complete Value Stream transaction execution cycle when Deployment Log
-        is submitted, then synchronize Deployment Management practice health.
-        """
-        change_request = getattr(
-                doc,
-                "change_request",
-                None
-        )
+def on_incident_update(doc, method=None):
+	"""
+	Auto-link Incident to Problem when applicable and immediately
+	synchronize the Incident Management practice backlog.
+	"""
+	linked_problem = getattr(doc, "linked_problem", None)
 
-        if change_request:
-                frappe.db.set_value(
-                        "ITIL Change Request",
-                        change_request,
-                        "workflow_state",
-                        "Implemented"
-                )
+	if linked_problem:
+		_create_practice_link(
+			source_doctype="ITIL Incident",
+			source_name=doc.name,
+			target_doctype="ITIL Problem",
+			target_name=linked_problem,
+			link_type="Caused By / Investigated Via",
+		)
 
-        practice_name = frappe.db.get_value(
-                "ITIL Practice",
-                {"doctype_reference": "ITIL Deployment Log"},
-                "name"
-        )
+	sync_practice_by_doctype("ITIL Incident")
 
-        if practice_name:
-                practice = frappe.get_doc(
-                        "ITIL Practice",
-                        practice_name
-                )
 
-                metrics = calculate_practice_live_metrics(
-                        practice.practice_name
-                )
+def on_problem_update(doc, method=None):
+	"""
+	Auto-link Problem to Change Request when the linked_change_request
+	field exists and contains a value, then synchronize the
+	Problem Management practice health.
+	"""
+	linked_change_request = getattr(doc, "linked_change_request", None)
 
-                practice.open_items_count = metrics["open_backlog"]
-                practice.health_score = metrics["health_score"]
-                practice.last_calculated = now_datetime()
+	if linked_change_request:
+		_create_practice_link(
+			source_doctype="ITIL Problem",
+			source_name=doc.name,
+			target_doctype="ITIL Change Request",
+			target_name=linked_change_request,
+			link_type="Resolved Via Change",
+		)
 
-                practice.save(ignore_permissions=True)
+	sync_practice_by_doctype("ITIL Problem")
 
-        # Immediately synchronize Release Management because
-        # deployment submission changes the related Change Request
-        # workflow_state to Implemented.
-        release_practice_name = frappe.db.get_value(
-                "ITIL Practice",
-                {"practice_name": "Release Management"},
-                "name"
-        )
 
-        if release_practice_name:
-                release_practice = frappe.get_doc(
-                        "ITIL Practice",
-                        release_practice_name
-                )
+def on_change_update(doc, method=None):
+	"""
+	Auto-link Change Request to Deployment Log when the Change Request
+	has been implemented and a deployment_log field exists, then
+	synchronize practices that use ITIL Change Request
+	(e.g. Release Management).
+	"""
+	deployment_log = getattr(doc, "deployment_log", None)
 
-                release_metrics = calculate_practice_live_metrics(
-                        release_practice.practice_name
-                )
+	if getattr(doc, "workflow_state", None) == "Implemented" and deployment_log:
+		_create_practice_link(
+			source_doctype="ITIL Change Request",
+			source_name=doc.name,
+			target_doctype="ITIL Deployment Log",
+			target_name=deployment_log,
+			link_type="Deployed Via",
+		)
 
-                release_practice.open_items_count = (
-                        release_metrics["open_backlog"]
-                )
-                release_practice.health_score = (
-                        release_metrics["health_score"]
-                )
-                release_practice.last_calculated = now_datetime()
+	sync_practice_by_doctype("ITIL Change Request")
 
-                release_practice.save(
-                        ignore_permissions=True
-                )
 
-        frappe.db.commit()
+def on_deployment_submit(doc, method=None):
+	"""
+	Complete Value Stream transaction execution cycle when Deployment Log
+	is submitted, then synchronize Deployment Management + Release Management.
+	"""
+	change_request = getattr(doc, "change_request", None)
+
+	if change_request:
+		frappe.db.set_value(
+			"ITIL Change Request",
+			change_request,
+			"workflow_state",
+			"Implemented",
+		)
+
+	sync_practice_by_doctype("ITIL Deployment Log")
+	# Deployment submission may change related Change Request state
+	sync_practice_by_doctype("ITIL Change Request")
 
 
 def _create_practice_link(source_doctype, source_name, target_doctype, target_name, link_type):
@@ -1336,7 +1239,7 @@ def _create_practice_link(source_doctype, source_name, target_doctype, target_na
 		"source_doctype": source_doctype,
 		"source_name": source_name,
 		"target_doctype": target_doctype,
-		"target_name": target_name
+		"target_name": target_name,
 	})
 	if not exists:
 		link = frappe.get_doc({
@@ -1346,10 +1249,9 @@ def _create_practice_link(source_doctype, source_name, target_doctype, target_na
 			"target_doctype": target_doctype,
 			"target_name": target_name,
 			"link_type": link_type,
-			"created_on": now_datetime()
+			"created_on": now_datetime(),
 		})
 		link.insert(ignore_permissions=True)
-
 
 @frappe.whitelist()
 def set_redirect_after_login(login_manager=None):
