@@ -6,6 +6,9 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 	});
 
 	page.main.addClass('itil-pd-wrapper');
+	// Set false untuk matikan sidebar tanpa restore file
+	var ENABLE_PRACTICE_SIDEBAR = false;
+	var current_practice_slug = null;
 
 	// Helper to resolve route practice parameter
 	function get_selected_practice() {
@@ -23,20 +26,39 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 	function load_practice_dashboard() {
 		var practice_param = get_selected_practice();
 		if (!practice_param) {
-			// Tidak ada practice di URL → kembali ke Master Dashboard
 			frappe.set_route("itil-master-dashboard");
 			return;
 		}
+
+		current_practice_slug = practice_param;
 
 		frappe.call({
 			method: 'itil_master_control.practice_registry.get_practice_definition',
 			args: { practice: practice_param },
 			callback: function (r) {
 				if (r.message && !r.message.error) {
-					render_dashboard(r.message.practice, r.message.recent_records);
+					if (ENABLE_PRACTICE_SIDEBAR) {
+						load_registry_then_render(r.message.practice, r.message.recent_records);
+					} else {
+						render_dashboard(r.message.practice, r.message.recent_records);
+					}
 				} else {
 					render_error(r.message ? r.message.error : "Failed to load practice definition.");
 				}
+			}
+		});
+	}
+
+	function load_registry_then_render(practice, recent_records) {
+		frappe.call({
+			method: 'itil_master_control.practice_registry.get_practice_registry',
+			callback: function (r) {
+				var registry = r.message || {};
+				render_dashboard_with_sidebar(practice, recent_records, registry);
+			},
+			error: function () {
+				// Fallback: tampilan lama tanpa sidebar
+				render_dashboard(practice, recent_records);
 			}
 		});
 	}
@@ -59,7 +81,107 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 		page.main.html(html);
 		bind_nav_events();
 	}
+	function build_sidebar_html(registry, active_slug) {
+		var groups = [
+			"General Management Practices",
+			"Service Management Practices",
+			"Technical Management Practices"
+		];
+		var short_labels = {
+			"General Management Practices": "General",
+			"Service Management Practices": "Service",
+			"Technical Management Practices": "Technical"
+		};
 
+		var html = `
+			<aside class="itil-pd-sidebar">
+				<div class="itil-pd-sidebar-header">
+					<div class="itil-pd-sidebar-title">ITIL Practices</div>
+					<button type="button" class="btn btn-default btn-xs itil-pd-sidebar-home" id="btn-sidebar-master">
+						← Master Dashboard
+					</button>
+				</div>
+				<div class="itil-pd-sidebar-body">
+		`;
+
+		groups.forEach(function (group_name) {
+			var items = registry[group_name] || [];
+			if (!items.length) return;
+
+			// Buka grup jika berisi practice yang sedang aktif
+			var group_has_active = items.some(function (item) {
+				var slug = item.practice_slug || frappe.scrub(item.practice_name || '').replace(/_/g, '-');
+				return (slug === active_slug) || (item.practice_name === active_slug);
+			});
+
+			html += `
+				<div class="itil-pd-sidebar-group ${group_has_active ? 'is-open' : ''}">
+					<button type="button" class="itil-pd-sidebar-group-toggle">
+						<span class="itil-pd-sidebar-group-label">${frappe.utils.escape_html(short_labels[group_name] || group_name)}</span>
+						<span class="itil-pd-sidebar-group-count">${items.length}</span>
+						<span class="itil-pd-sidebar-chevron">▾</span>
+					</button>
+					<ul class="itil-pd-sidebar-list">
+			`;
+
+			items.forEach(function (item) {
+				var slug = item.practice_slug || frappe.scrub(item.practice_name || '').replace(/_/g, '-');
+				var is_active = (slug === active_slug) || (item.practice_name === active_slug);
+				html += `
+					<li>
+						<a href="#" class="itil-pd-sidebar-link ${is_active ? 'active' : ''}"
+						   data-slug="${frappe.utils.escape_html(slug)}">
+							<span class="itil-pd-sidebar-link-text">${frappe.utils.escape_html(item.practice_name || '')}</span>
+							<span class="itil-pd-sidebar-badge">${item.open_items_count || 0}</span>
+						</a>
+					</li>
+				`;
+			});
+
+			html += `</ul></div>`;
+		});
+
+		html += `</div></aside>`;
+		return html;
+	}
+
+	function render_dashboard_with_sidebar(p, recent_records, registry) {
+		render_dashboard(p, recent_records);
+
+		var $old = page.main.children().detach();
+		var practice_slug = p.practice_slug || frappe.scrub(p.practice_name).replace(/_/g, '-');
+		var sidebar = build_sidebar_html(registry, practice_slug);
+
+		page.main.html(`
+			<div class="itil-pd-layout">
+				${sidebar}
+				<div class="itil-pd-main"></div>
+			</div>
+		`);
+		page.main.find('.itil-pd-main').append($old);
+
+		// Sembunyikan tombol back ganda di konten kanan (sudah ada di sidebar)
+		page.main.find('.itil-pd-main .itil-pd-header-nav').hide();
+
+		// Navigasi sidebar → Master Dashboard
+		page.main.find('#btn-sidebar-master').on('click', function () {
+			frappe.set_route('itil-master-dashboard');
+		});
+
+		// Klik practice
+		page.main.find('.itil-pd-sidebar-link').on('click', function (e) {
+			e.preventDefault();
+			var slug = $(this).attr('data-slug');
+			if (slug) {
+				frappe.set_route('itil-practice-dashboard', { practice: slug });
+			}
+		});
+
+		// Toggle collapse/expand grup
+		page.main.find('.itil-pd-sidebar-group-toggle').on('click', function () {
+			$(this).closest('.itil-pd-sidebar-group').toggleClass('is-open');
+		});
+	}
 	function render_dashboard(p, recent_records) {
 		page.set_title(__(p.practice_name));
 
