@@ -7,7 +7,7 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 
 	page.main.addClass('itil-pd-wrapper');
 	// Set false untuk matikan sidebar tanpa restore file
-	var ENABLE_PRACTICE_SIDEBAR = false;
+	var ENABLE_PRACTICE_SIDEBAR = true;
 	var current_practice_slug = null;
 
 	// Helper to resolve route practice parameter
@@ -83,45 +83,44 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 	}
 	function build_sidebar_html(registry, active_slug) {
 		var groups = [
-			"General Management Practices",
-			"Service Management Practices",
-			"Technical Management Practices"
+			{ key: "General Management Practices", label: "General Management" },
+			{ key: "Service Management Practices", label: "Service Management" },
+			{ key: "Technical Management Practices", label: "Technical Management" }
 		];
-		var short_labels = {
-			"General Management Practices": "General",
-			"Service Management Practices": "Service",
-			"Technical Management Practices": "Technical"
-		};
 
 		var html = `
-			<aside class="itil-pd-sidebar">
-				<div class="itil-pd-sidebar-header">
-					<div class="itil-pd-sidebar-title">ITIL Practices</div>
-					<button type="button" class="btn btn-default btn-xs itil-pd-sidebar-home" id="btn-sidebar-master">
-						← Master Dashboard
-					</button>
+			<aside class="itil-shell-sidebar">
+				<div class="itil-shell-sidebar-top">
+					<div class="itil-shell-section-label">ITIL Practices</div>
+					<a href="#" class="itil-shell-nav-item" data-route="itil-master-dashboard">
+						<span class="itil-shell-nav-icon">⌂</span>
+						<span>Dashboard</span>
+					</a>
+					<a href="#" class="itil-shell-nav-item" data-route="itil-master-dashboard">
+						<span class="itil-shell-nav-icon">▦</span>
+						<span>All Practices</span>
+					</a>
 				</div>
-				<div class="itil-pd-sidebar-body">
+				<div class="itil-shell-sidebar-scroll">
 		`;
 
-		groups.forEach(function (group_name) {
-			var items = registry[group_name] || [];
+		groups.forEach(function (g) {
+			var items = registry[g.key] || [];
 			if (!items.length) return;
 
-			// Buka grup jika berisi practice yang sedang aktif
 			var group_has_active = items.some(function (item) {
 				var slug = item.practice_slug || frappe.scrub(item.practice_name || '').replace(/_/g, '-');
 				return (slug === active_slug) || (item.practice_name === active_slug);
 			});
 
 			html += `
-				<div class="itil-pd-sidebar-group ${group_has_active ? 'is-open' : ''}">
-					<button type="button" class="itil-pd-sidebar-group-toggle">
-						<span class="itil-pd-sidebar-group-label">${frappe.utils.escape_html(short_labels[group_name] || group_name)}</span>
-						<span class="itil-pd-sidebar-group-count">${items.length}</span>
-						<span class="itil-pd-sidebar-chevron">▾</span>
+				<div class="itil-shell-group ${group_has_active ? 'is-open' : ''}">
+					<button type="button" class="itil-shell-group-toggle">
+						<span class="itil-shell-group-label">${frappe.utils.escape_html(g.label)}</span>
+						<span class="itil-shell-group-count">${items.length}</span>
+						<span class="itil-shell-chevron">▾</span>
 					</button>
-					<ul class="itil-pd-sidebar-list">
+					<ul class="itil-shell-nav-list">
 			`;
 
 			items.forEach(function (item) {
@@ -129,10 +128,8 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 				var is_active = (slug === active_slug) || (item.practice_name === active_slug);
 				html += `
 					<li>
-						<a href="#" class="itil-pd-sidebar-link ${is_active ? 'active' : ''}"
-						   data-slug="${frappe.utils.escape_html(slug)}">
-							<span class="itil-pd-sidebar-link-text">${frappe.utils.escape_html(item.practice_name || '')}</span>
-							<span class="itil-pd-sidebar-badge">${item.open_items_count || 0}</span>
+						<a href="#" class="itil-shell-nav-item ${is_active ? 'active' : ''}" data-slug="${frappe.utils.escape_html(slug)}">
+							<span class="itil-shell-nav-text">${frappe.utils.escape_html(item.practice_name || '')}</span>
 						</a>
 					</li>
 				`;
@@ -141,45 +138,71 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 			html += `</ul></div>`;
 		});
 
-		html += `</div></aside>`;
+		html += `
+				</div>
+			</aside>
+		`;
 		return html;
 	}
 
 	function render_dashboard_with_sidebar(p, recent_records, registry) {
+		// Render konten lama (metrics, actions, gantt, dll) — fungsi tidak diubah
 		render_dashboard(p, recent_records);
 
 		var $old = page.main.children().detach();
 		var practice_slug = p.practice_slug || frappe.scrub(p.practice_name).replace(/_/g, '-');
 		var sidebar = build_sidebar_html(registry, practice_slug);
 
+		// Full-wide shell
 		page.main.html(`
-			<div class="itil-pd-layout">
+			<div class="itil-shell-layout">
 				${sidebar}
-				<div class="itil-pd-main"></div>
+				<div class="itil-shell-main"></div>
 			</div>
 		`);
-		page.main.find('.itil-pd-main').append($old);
+		page.main.find('.itil-shell-main').append($old);
 
-		// Sembunyikan tombol back ganda di konten kanan (sudah ada di sidebar)
-		page.main.find('.itil-pd-main .itil-pd-header-nav').hide();
+		// Sembunyikan back button lama (navigasi sudah di sidebar)
+		page.main.find('.itil-shell-main .itil-pd-header-nav').hide();
 
-		// Navigasi sidebar → Master Dashboard
-		page.main.find('#btn-sidebar-master').on('click', function () {
-			frappe.set_route('itil-master-dashboard');
-		});
+		// Full width: hilangkan batasan container Frappe pada page ini
+		$(wrapper).closest('.page-container').addClass('itil-shell-page');
+		$(wrapper).find('.layout-main-section').addClass('itil-shell-section');
+		$(wrapper).find('.page-head').hide();
 
-		// Klik practice
-		page.main.find('.itil-pd-sidebar-link').on('click', function (e) {
+		// Sidebar → Dashboard / All Practices
+		page.main.find('.itil-shell-nav-item[data-route]').on('click', function (e) {
 			e.preventDefault();
-			var slug = $(this).attr('data-slug');
-			if (slug) {
-				frappe.set_route('itil-practice-dashboard', { practice: slug });
-			}
+			var route = $(this).attr('data-route');
+			if (route) frappe.set_route(route);
 		});
 
-		// Toggle collapse/expand grup
-		page.main.find('.itil-pd-sidebar-group-toggle').on('click', function () {
-			$(this).closest('.itil-pd-sidebar-group').toggleClass('is-open');
+		// Sidebar → practice lain
+		page.main.find('.itil-shell-nav-item[data-slug]').on('click', function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+			var slug = $(this).attr('data-slug');
+			if (!slug) return;
+
+			// Set parameter practice
+			frappe.route_options = { practice: slug };
+			frappe.set_route('itil-practice-dashboard', { practice: slug });
+
+			// Paksa reload konten (karena page yang sama)
+			setTimeout(function () {
+				load_practice_dashboard();
+			}, 30);
+		});
+
+		// Accordion: buka/tutup group (hanya satu group terbuka)
+		page.main.find('.itil-shell-group-toggle').on('click', function () {
+			var $group = $(this).closest('.itil-shell-group');
+			var will_open = !$group.hasClass('is-open');
+
+			page.main.find('.itil-shell-group').removeClass('is-open');
+			if (will_open) {
+				$group.addClass('is-open');
+			}
 		});
 	}
 	function render_dashboard(p, recent_records) {
