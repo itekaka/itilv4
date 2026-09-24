@@ -1,0 +1,68 @@
+{
+  "actions": [],
+  "creation": "2026-09-24 00:00:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "mount_point",
+    "filesystem",
+    "total_bytes",
+    "used_bytes",
+    "free_bytes",
+    "usage_percent"
+  ],
+  "fields": [
+    {
+      "fieldname": "mount_point",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Mount Point",
+      "length": 255
+    },
+    {
+      "fieldname": "filesystem",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Filesystem",
+      "length": 64
+    },
+    {
+      "fieldname": "total_bytes",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Total Bytes",
+      "length": 32
+    },
+    {
+      "fieldname": "used_bytes",
+      "fieldtype": "Data",
+      "label": "Used Bytes",
+      "length": 32
+    },
+    {
+      "fieldname": "free_bytes",
+      "fieldtype": "Data",
+      "label": "Free Bytes",
+      "length": 32
+    },
+    {
+      "fieldname": "usage_percent",
+      "fieldtype": "Percent",
+      "in_list_view": 1,
+      "label": "Usage %"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "istable": 1,
+  "links": [],
+  "modified": "2026-09-24 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "IT Asset Management",
+  "name": "Endpoint Partition",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "idx",
+  "sort_order": "ASC",
+  "states": []
+}

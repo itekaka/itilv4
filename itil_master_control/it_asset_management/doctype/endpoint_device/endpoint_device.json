@@ -1,0 +1,270 @@
+{
+  "actions": [],
+  "allow_rename": 0,
+  "autoname": "field:device_uuid",
+  "creation": "2026-09-24 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "identity_section",
+    "device_uuid",
+    "hostname",
+    "column_break_id_1",
+    "status",
+    "last_seen",
+    "agent_version",
+    "device_info_section",
+    "serial_number",
+    "asset_tag",
+    "manufacturer",
+    "model",
+    "column_break_info_1",
+    "os_name",
+    "os_version",
+    "architecture",
+    "logged_user",
+    "hardware_section",
+    "cpu_model",
+    "physical_cores",
+    "logical_cores",
+    "column_break_hw_1",
+    "ram_total_bytes",
+    "bios_version",
+    "bios_serial",
+    "motherboard",
+    "storage_section",
+    "disks",
+    "network_section",
+    "network_interfaces",
+    "software_section",
+    "installed_software"
+  ],
+  "fields": [
+    {
+      "fieldname": "identity_section",
+      "fieldtype": "Section Break",
+      "label": "Identity & Status"
+    },
+    {
+      "fieldname": "device_uuid",
+      "fieldtype": "Data",
+      "label": "Device UUID",
+      "reqd": 1,
+      "unique": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "bold": 1,
+      "length": 36,
+      "description": "Stable agent identity (UUID). Primary key for registration."
+    },
+    {
+      "fieldname": "hostname",
+      "fieldtype": "Data",
+      "label": "Hostname",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "length": 255
+    },
+    {
+      "fieldname": "column_break_id_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "ONLINE\nWARNING\nOFFLINE",
+      "default": "OFFLINE",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "last_seen",
+      "fieldtype": "Datetime",
+      "label": "Last Seen",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "agent_version",
+      "fieldtype": "Data",
+      "label": "Agent Version",
+      "length": 32
+    },
+    {
+      "fieldname": "device_info_section",
+      "fieldtype": "Section Break",
+      "label": "Device Information"
+    },
+    {
+      "fieldname": "serial_number",
+      "fieldtype": "Data",
+      "label": "Serial Number",
+      "in_standard_filter": 1,
+      "length": 128
+    },
+    {
+      "fieldname": "asset_tag",
+      "fieldtype": "Data",
+      "label": "Asset Tag",
+      "length": 128
+    },
+    {
+      "fieldname": "manufacturer",
+      "fieldtype": "Data",
+      "label": "Manufacturer",
+      "length": 128
+    },
+    {
+      "fieldname": "model",
+      "fieldtype": "Data",
+      "label": "Model",
+      "length": 128
+    },
+    {
+      "fieldname": "column_break_info_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "os_name",
+      "fieldtype": "Data",
+      "label": "OS Name",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "length": 128
+    },
+    {
+      "fieldname": "os_version",
+      "fieldtype": "Data",
+      "label": "OS Version",
+      "length": 64
+    },
+    {
+      "fieldname": "architecture",
+      "fieldtype": "Data",
+      "label": "Architecture",
+      "length": 32
+    },
+    {
+      "fieldname": "logged_user",
+      "fieldtype": "Data",
+      "label": "Logged User",
+      "length": 128
+    },
+    {
+      "fieldname": "hardware_section",
+      "fieldtype": "Section Break",
+      "label": "Hardware",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "cpu_model",
+      "fieldtype": "Data",
+      "label": "CPU Model",
+      "length": 255
+    },
+    {
+      "fieldname": "physical_cores",
+      "fieldtype": "Int",
+      "label": "Physical Cores"
+    },
+    {
+      "fieldname": "logical_cores",
+      "fieldtype": "Int",
+      "label": "Logical Cores"
+    },
+    {
+      "fieldname": "column_break_hw_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "ram_total_bytes",
+      "fieldtype": "Data",
+      "label": "RAM Total (Bytes)",
+      "length": 32,
+      "description": "Total RAM in bytes (from agent). Display formatting can be added later."
+    },
+    {
+      "fieldname": "bios_version",
+      "fieldtype": "Data",
+      "label": "BIOS Version",
+      "length": 128
+    },
+    {
+      "fieldname": "bios_serial",
+      "fieldtype": "Data",
+      "label": "BIOS Serial",
+      "length": 128
+    },
+    {
+      "fieldname": "motherboard",
+      "fieldtype": "Data",
+      "label": "Motherboard",
+      "length": 255
+    },
+    {
+      "fieldname": "storage_section",
+      "fieldtype": "Section Break",
+      "label": "Storage",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "disks",
+      "fieldtype": "Table",
+      "label": "Disks",
+      "options": "Endpoint Disk"
+    },
+    {
+      "fieldname": "network_section",
+      "fieldtype": "Section Break",
+      "label": "Network Interfaces",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "network_interfaces",
+      "fieldtype": "Table",
+      "label": "Network Interfaces",
+      "options": "Endpoint Network Interface"
+    },
+    {
+      "fieldname": "software_section",
+      "fieldtype": "Section Break",
+      "label": "Installed Software",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "installed_software",
+      "fieldtype": "Table",
+      "label": "Installed Software",
+      "options": "Endpoint Device Software"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2026-09-24 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "IT Asset Management",
+  "name": "Endpoint Device",
+  "naming_rule": "By fieldname",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "search_fields": "hostname,serial_number,os_name,status",
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "hostname",
+  "track_changes": 1
+}

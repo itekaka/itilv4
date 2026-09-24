@@ -1,0 +1,83 @@
+{
+  "actions": [],
+  "creation": "2026-09-24 00:00:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "name_nic",
+    "interface_type",
+    "mac_address",
+    "ipv4",
+    "ipv6",
+    "gateway",
+    "dns",
+    "dhcp_enabled"
+  ],
+  "fields": [
+    {
+      "fieldname": "name_nic",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Name",
+      "length": 128
+    },
+    {
+      "fieldname": "interface_type",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Interface Type",
+      "length": 64
+    },
+    {
+      "fieldname": "mac_address",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "MAC Address",
+      "length": 32
+    },
+    {
+      "fieldname": "ipv4",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "IPv4",
+      "length": 45
+    },
+    {
+      "fieldname": "ipv6",
+      "fieldtype": "Data",
+      "label": "IPv6",
+      "length": 45
+    },
+    {
+      "fieldname": "gateway",
+      "fieldtype": "Data",
+      "label": "Gateway",
+      "length": 45
+    },
+    {
+      "fieldname": "dns",
+      "fieldtype": "Data",
+      "label": "DNS",
+      "length": 255
+    },
+    {
+      "fieldname": "dhcp_enabled",
+      "fieldtype": "Check",
+      "in_list_view": 1,
+      "label": "DHCP Enabled"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "istable": 1,
+  "links": [],
+  "modified": "2026-09-24 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "IT Asset Management",
+  "name": "Endpoint Network Interface",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "idx",
+  "sort_order": "ASC",
+  "states": []
+}

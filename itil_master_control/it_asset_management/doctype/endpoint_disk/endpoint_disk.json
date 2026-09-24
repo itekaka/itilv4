@@ -1,0 +1,82 @@
+{
+  "actions": [],
+  "creation": "2026-09-24 00:00:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "disk_index",
+    "model",
+    "serial_number",
+    "capacity_bytes",
+    "interface_type",
+    "health_status",
+    "partitions_section",
+    "partitions"
+  ],
+  "fields": [
+    {
+      "fieldname": "disk_index",
+      "fieldtype": "Int",
+      "in_list_view": 1,
+      "label": "Disk Index"
+    },
+    {
+      "fieldname": "model",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Model",
+      "length": 255
+    },
+    {
+      "fieldname": "serial_number",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Serial Number",
+      "length": 128
+    },
+    {
+      "fieldname": "capacity_bytes",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Capacity Bytes",
+      "length": 32
+    },
+    {
+      "fieldname": "interface_type",
+      "fieldtype": "Data",
+      "label": "Interface Type",
+      "length": 64
+    },
+    {
+      "fieldname": "health_status",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Health Status",
+      "length": 32
+    },
+    {
+      "fieldname": "partitions_section",
+      "fieldtype": "Section Break",
+      "label": "Partitions"
+    },
+    {
+      "fieldname": "partitions",
+      "fieldtype": "Table",
+      "label": "Partitions",
+      "options": "Endpoint Partition"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "istable": 1,
+  "links": [],
+  "modified": "2026-09-24 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "IT Asset Management",
+  "name": "Endpoint Disk",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "idx",
+  "sort_order": "ASC",
+  "states": []
+}
