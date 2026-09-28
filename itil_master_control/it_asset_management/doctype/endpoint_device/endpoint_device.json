@@ -113,13 +113,15 @@
       "fieldname": "manufacturer",
       "fieldtype": "Data",
       "label": "Manufacturer",
-      "length": 128
+      "length": 128,
+      "in_list_view": 1
     },
     {
       "fieldname": "model",
       "fieldtype": "Data",
       "label": "Model",
-      "length": 128
+      "length": 128,
+      "in_list_view": 1
     },
     {
       "fieldname": "column_break_info_1",
@@ -261,7 +263,7 @@
       "write": 1
     }
   ],
-  "search_fields": "hostname,serial_number,os_name,status",
+  "search_fields": "hostname,device_uuid,os_name,status,manufacturer,model",
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": [],

@@ -151,6 +151,7 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 
 		var $old = page.main.children().detach();
 		var practice_slug = p.practice_slug || frappe.scrub(p.practice_name).replace(/_/g, '-');
+		var is_itam = (p.practice_name === 'IT Asset Management' || practice_slug === 'it-asset-management');
 		var sidebar = build_sidebar_html(registry, practice_slug);
 
 		// Full-wide shell
@@ -211,6 +212,7 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 		var doctype_ref = p.doctype_reference || '';
 		var has_doctype = doctype_ref && doctype_ref !== 'null';
 		var practice_slug = p.practice_slug || frappe.scrub(p.practice_name).replace(/_/g, '-');
+		var is_itam = (p.practice_name === 'IT Asset Management' || practice_slug === 'it-asset-management');
 
 		var html = `
 			<div class="itil-pd-container">
@@ -268,7 +270,10 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 							<i class="octicon octicon-plus"></i> Create New ${frappe.utils.escape_html(doctype_ref)}
 						</button>
 					` : ''}
-					<button class="btn btn-default btn-sm" id="btn-open-vsm">
+					${is_itam ? `
+				<button class="btn btn-default btn-sm" id="btn-view-endpoint-devices"><i class="octicon octicon-device-desktop"></i> View Endpoint Devices</button>
+				<button class="btn btn-default btn-sm" id="btn-view-agent-events"><i class="octicon octicon-pulse"></i> View Agent Events</button>
+				<button class="btn btn-default btn-sm" id="btn-view-endpoint-software"><i class="octicon octicon-package"></i> View Endpoint Software</button>` : ''}<button class="btn btn-default btn-sm" id="btn-open-vsm">
 						<i class="octicon octicon-pulse"></i> Service Value Stream Mapper
 					</button>
 				</div>
@@ -324,6 +329,11 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 				frappe.new_doc(doctype_ref);
 			});
 		}
+
+		// ITAM Endpoint shortcuts (only visible when IT Asset Management)
+		$('#btn-view-endpoint-devices').on('click', function(){ frappe.set_route('List', 'Endpoint Device'); });
+		$('#btn-view-agent-events').on('click', function(){ frappe.set_route('List', 'Endpoint Agent Event'); });
+		$('#btn-view-endpoint-software').on('click', function(){ frappe.set_route('List', 'Endpoint Software'); });
 
 		// Initialize Gantt if Project Management
 		if (practice_slug === 'project-management') {

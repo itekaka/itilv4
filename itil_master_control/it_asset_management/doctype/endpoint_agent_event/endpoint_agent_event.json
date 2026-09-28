@@ -77,5 +77,6 @@
   "sort_field": "created_at",
   "sort_order": "DESC",
   "states": [],
-  "title_field": "event_type"
+  "title_field": "event_type",
+  "search_fields": "event_type,device"
 }

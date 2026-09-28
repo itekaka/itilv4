@@ -5,7 +5,7 @@
       "label": "Overall ITIL Practice Health Index"
     }
   ],
-  "content": "[{\"type\":\"header\",\"data\":{\"text\":\"ITIL 4 Master Control Panel\",\"level\":1}},{\"type\":\"text\",\"data\":{\"text\":\"Holistic Governance Engine for ITIL 4 Practices & Service Value Stream Mapping\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Service Value Stream Mapper\"}},{\"type\":\"header\",\"data\":{\"text\":\"General Management Practices\",\"level\":2}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Organizational Change Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Knowledge Management\"}},{\"type\":\"header\",\"data\":{\"text\":\"Service Management Practices\",\"level\":2}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Supplier Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Service Financial Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Incident Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Problem Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Service Request Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Change Enablement\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Service Level Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Service Continuity Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Service Design\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Service Desk\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Service Validation & Testing\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Deployment Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Release Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Measurement & Reporting\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Risk Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Project Management\"}},{\"type\":\"header\",\"data\":{\"text\":\"Technical Management Practices\",\"level\":2}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Information Security Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Architecture Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"IT Asset Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Software Development & Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Monitoring & Event Management\"}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Infrastructure & Platform Management\"}}]",
+  "content": "[{\"type\": \"header\", \"data\": {\"text\": \"ITIL 4 Master Control Panel\", \"level\": 1}}, {\"type\": \"text\", \"data\": {\"text\": \"Holistic Governance Engine for ITIL 4 Practices & Service Value Stream Mapping\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Service Value Stream Mapper\"}}, {\"type\": \"header\", \"data\": {\"text\": \"General Management Practices\", \"level\": 2}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Organizational Change Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Knowledge Management\"}}, {\"type\": \"header\", \"data\": {\"text\": \"Service Management Practices\", \"level\": 2}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Supplier Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Service Financial Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Incident Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Problem Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Service Request Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Change Enablement\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Service Level Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Service Continuity Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Service Design\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Service Desk\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Service Validation & Testing\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Deployment Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Release Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Measurement & Reporting\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Risk Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Project Management\"}}, {\"type\": \"header\", \"data\": {\"text\": \"Technical Management Practices\", \"level\": 2}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Information Security Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Architecture Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"IT Asset Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Software Development & Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Monitoring & Event Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Infrastructure & Platform Management\"}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Endpoint Devices\"}}]",
   "creation": "2026-08-11 10:15:00.000000",
   "custom_blocks": [],
   "docstatus": 0,
@@ -57,6 +57,24 @@
       "color": "Purple",
       "label": "Change Enablement",
       "link_to": "ITIL Practice",
+      "type": "DocType"
+    },
+    {
+      "color": "Grey",
+      "label": "Endpoint Devices",
+      "link_to": "Endpoint Device",
+      "type": "DocType"
+    },
+    {
+      "color": "Grey",
+      "label": "Endpoint Agent Events",
+      "link_to": "Endpoint Agent Event",
+      "type": "DocType"
+    },
+    {
+      "color": "Grey",
+      "label": "Endpoint Software",
+      "link_to": "Endpoint Software",
       "type": "DocType"
     }
   ],
