@@ -448,3 +448,55 @@ def agent_inventory(agent_id=None, inventory_version=None, collected_at=None,
 		"message": "inventory received",
 		"changes_detected": changes_detected,
 	}
+def update_endpoint_device_status():
+	"""
+	Scheduler job (M5):
+	- ONLINE  if last_seen < 10 minutes
+	- WARNING if last_seen between 10 and 30 minutes
+	- OFFLINE if last_seen > 30 minutes or empty
+	"""
+	from frappe.utils import get_datetime
+
+	now = now_datetime()
+	if getattr(now, "tzinfo", None) is not None:
+		now = now.replace(tzinfo=None)
+
+	devices = frappe.db.sql("""
+    SELECT name, status, last_seen
+    FROM `tabEndpoint Device`
+    """, as_dict=True)
+
+	updated = 0
+	for d in devices:
+		if not d.last_seen:
+			new_status = "OFFLINE"
+		else:
+			last = get_datetime(d.last_seen)
+			if getattr(last, "tzinfo", None) is not None:
+				last = last.replace(tzinfo=None)
+
+			age_sec = (now - last).total_seconds()
+			if age_sec < 0:
+				age_sec = 0
+
+			if age_sec > 30 * 60:
+				new_status = "OFFLINE"
+			elif age_sec > 10 * 60:
+				new_status = "WARNING"
+			else:
+				new_status = "ONLINE"
+
+		if d.status != new_status:
+			frappe.db.set_value(
+				"Endpoint Device",
+				d.name,
+				"status",
+				new_status,
+				update_modified=False,
+			)
+			updated += 1
+
+	if updated:
+		frappe.db.commit()
+
+	return {"updated": updated}
