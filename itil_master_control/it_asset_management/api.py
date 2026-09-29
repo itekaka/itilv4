@@ -7,7 +7,7 @@ import json
 import frappe
 from frappe import _
 from frappe.utils import now_datetime
-
+from frappe.utils import cint
 
 # Default intervals (seconds) — sesuai Implementation Spec
 DEFAULT_HEARTBEAT_INTERVAL = 300
@@ -275,7 +275,15 @@ def agent_inventory(agent_id=None, inventory_version=None, collected_at=None,
 
 	Auth: X-Agent-ID + X-Agent-Secret (or body secret).
 	"""
-	data = frappe.request.get_json(silent=True) or {}
+	data = frappe.request.get_json(silent=True)  or {}
+	# M7: reject oversized payload (~2 MB)
+	try:
+		raw = frappe.request.get_data() or b""
+		if len(raw) > 2 * 1024 * 1024:
+			frappe.local.response["http_status_code"] = 400
+			return {"success": False, "message": "payload too large"}
+	except Exception:
+		pass
 
 	agent_id = (agent_id or data.get("agent_id") or "").strip()
 	inventory_version = data.get("inventory_version") or inventory_version
