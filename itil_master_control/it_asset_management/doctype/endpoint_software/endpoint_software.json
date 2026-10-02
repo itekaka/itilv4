@@ -61,5 +61,6 @@
   "sort_field": "software_name",
   "sort_order": "ASC",
   "states": [],
-  "title_field": "software_name"
+  "title_field": "software_name",
+  "show_title_field_in_link": 1
 }
