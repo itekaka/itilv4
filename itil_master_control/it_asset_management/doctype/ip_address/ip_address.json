@@ -1,0 +1,123 @@
+{
+  "actions": [],
+  "allow_rename": 0,
+  "autoname": "format:IP-{#####}",
+  "creation": "2026-10-19 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "ip",
+    "vlan",
+    "column_break_1",
+    "status",
+    "mac_address",
+    "assignment_section",
+    "assigned_to_device",
+    "assigned_to_asset",
+    "description"
+  ],
+  "fields": [
+    {
+      "fieldname": "ip",
+      "fieldtype": "Data",
+      "label": "IP Address",
+      "reqd": 1,
+      "unique": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "bold": 1,
+      "length": 64
+    },
+    {
+      "fieldname": "vlan",
+      "fieldtype": "Link",
+      "label": "VLAN",
+      "options": "VLAN",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "Free\nAssigned\nReserved\nDeprecated",
+      "default": "Free",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "mac_address",
+      "fieldtype": "Data",
+      "label": "MAC Address",
+      "length": 32
+    },
+    {
+      "fieldname": "assignment_section",
+      "fieldtype": "Section Break",
+      "label": "Assignment"
+    },
+    {
+      "fieldname": "assigned_to_device",
+      "fieldtype": "Link",
+      "label": "Assigned to Endpoint Device",
+      "options": "Endpoint Device"
+    },
+    {
+      "fieldname": "assigned_to_asset",
+      "fieldtype": "Link",
+      "label": "Assigned to ITIL Asset",
+      "options": "ITIL Asset"
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Small Text",
+      "label": "Description"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2026-10-19 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "IT Asset Management",
+  "name": "IP Address",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "IT Asset Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "search_fields": "ip,vlan,status,mac_address",
+  "sort_field": "ip",
+  "sort_order": "ASC",
+  "states": [],
+  "title_field": "ip",
+  "track_changes": 1
+}

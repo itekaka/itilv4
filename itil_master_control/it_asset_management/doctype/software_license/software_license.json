@@ -1,0 +1,193 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "format:LIC-{#####}",
+  "creation": "2026-10-19 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "identity_section",
+    "license_name",
+    "software_name",
+    "column_break_id_1",
+    "license_type",
+    "compliance_status",
+    "quantity_section",
+    "seats",
+    "used_count",
+    "column_break_qty_1",
+    "available_count",
+    "dates_section",
+    "start_date",
+    "expiry_date",
+    "column_break_dates_1",
+    "publisher",
+    "vendor",
+    "notes_section",
+    "notes"
+  ],
+  "fields": [
+    {
+      "fieldname": "identity_section",
+      "fieldtype": "Section Break",
+      "label": "License Identity"
+    },
+    {
+      "fieldname": "license_name",
+      "fieldtype": "Data",
+      "label": "License Name",
+      "reqd": 1,
+      "in_list_view": 1,
+      "bold": 1,
+      "length": 255
+    },
+    {
+      "fieldname": "software_name",
+      "fieldtype": "Data",
+      "label": "Software Name",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "length": 255,
+      "description": "Match against Endpoint Software.software_name for counting installations."
+    },
+    {
+      "fieldname": "column_break_id_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "license_type",
+      "fieldtype": "Select",
+      "label": "License Type",
+      "options": "Perpetual\nSubscription\nConcurrent\nOEM\nFreeware\nOpen Source",
+      "default": "Subscription",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "compliance_status",
+      "fieldtype": "Select",
+      "label": "Compliance Status",
+      "options": "Compliant\nOver\nUnder\nUnknown",
+      "default": "Unknown",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "quantity_section",
+      "fieldtype": "Section Break",
+      "label": "Quantity"
+    },
+    {
+      "fieldname": "seats",
+      "fieldtype": "Int",
+      "label": "Seats / Entitlement",
+      "reqd": 1,
+      "default": 1,
+      "non_negative": 1
+    },
+    {
+      "fieldname": "used_count",
+      "fieldtype": "Int",
+      "label": "Used Count",
+      "default": 0,
+      "read_only": 1,
+      "description": "Calculated from Endpoint Device Software installations."
+    },
+    {
+      "fieldname": "column_break_qty_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "available_count",
+      "fieldtype": "Int",
+      "label": "Available",
+      "read_only": 1,
+      "description": "seats - used_count"
+    },
+    {
+      "fieldname": "dates_section",
+      "fieldtype": "Section Break",
+      "label": "Validity"
+    },
+    {
+      "fieldname": "start_date",
+      "fieldtype": "Date",
+      "label": "Start Date"
+    },
+    {
+      "fieldname": "expiry_date",
+      "fieldtype": "Date",
+      "label": "Expiry Date",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "column_break_dates_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "publisher",
+      "fieldtype": "Data",
+      "label": "Publisher",
+      "length": 128
+    },
+    {
+      "fieldname": "vendor",
+      "fieldtype": "Data",
+      "label": "Vendor / Reseller",
+      "length": 128
+    },
+    {
+      "fieldname": "notes_section",
+      "fieldtype": "Section Break",
+      "label": "Notes",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Text Editor",
+      "label": "Notes"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2026-10-19 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "IT Asset Management",
+  "name": "Software License",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "IT Asset Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "search_fields": "license_name,software_name,license_type,compliance_status",
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "license_name",
+  "track_changes": 1
+}

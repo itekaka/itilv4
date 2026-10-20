@@ -1,0 +1,294 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "format:AST-{#####}",
+  "creation": "2026-10-19 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "identity_section",
+    "asset_tag",
+    "asset_name",
+    "column_break_id_1",
+    "asset_type",
+    "lifecycle_status",
+    "endpoint_device",
+    "device_info_section",
+    "serial_number",
+    "manufacturer",
+    "model",
+    "column_break_info_1",
+    "hostname",
+    "os_name",
+    "os_version",
+    "assignment_section",
+    "assigned_to",
+    "location",
+    "column_break_assign_1",
+    "department",
+    "cost_center",
+    "financial_section",
+    "purchase_cost",
+    "purchase_date",
+    "currency",
+    "column_break_fin_1",
+    "warranty_end",
+    "supplier",
+    "po_number",
+    "config_section",
+    "configuration_item",
+    "notes",
+    "amended_from"
+  ],
+  "fields": [
+    {
+      "fieldname": "identity_section",
+      "fieldtype": "Section Break",
+      "label": "Identity & Status"
+    },
+    {
+      "fieldname": "asset_tag",
+      "fieldtype": "Data",
+      "label": "Asset Tag",
+      "reqd": 1,
+      "unique": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "bold": 1,
+      "length": 64,
+      "description": "Official asset tag / barcode. Primary business identity."
+    },
+    {
+      "fieldname": "asset_name",
+      "fieldtype": "Data",
+      "label": "Asset Name",
+      "in_list_view": 1,
+      "length": 255
+    },
+    {
+      "fieldname": "column_break_id_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "asset_type",
+      "fieldtype": "Select",
+      "label": "Asset Type",
+      "options": "Hardware\nSoftware\nNetwork\nCloud\nVirtual\nOther",
+      "default": "Hardware",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "lifecycle_status",
+      "fieldtype": "Select",
+      "label": "Lifecycle Status",
+      "options": "Planning\nOrdered\nReceived\nIn Stock\nAssigned\nIn Use\nMaintenance\nRetired\nDisposed",
+      "default": "In Stock",
+      "reqd": 1,
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "endpoint_device",
+      "fieldtype": "Link",
+      "label": "Endpoint Device (Discovered)",
+      "options": "Endpoint Device",
+      "description": "Linked discovered device from agent inventory (reconciliation)."
+    },
+    {
+      "fieldname": "device_info_section",
+      "fieldtype": "Section Break",
+      "label": "Device Information"
+    },
+    {
+      "fieldname": "serial_number",
+      "fieldtype": "Data",
+      "label": "Serial Number",
+      "in_standard_filter": 1,
+      "length": 128
+    },
+    {
+      "fieldname": "manufacturer",
+      "fieldtype": "Data",
+      "label": "Manufacturer",
+      "length": 128,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "model",
+      "fieldtype": "Data",
+      "label": "Model",
+      "length": 128,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "column_break_info_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "hostname",
+      "fieldtype": "Data",
+      "label": "Hostname",
+      "length": 255
+    },
+    {
+      "fieldname": "os_name",
+      "fieldtype": "Data",
+      "label": "OS Name",
+      "length": 128
+    },
+    {
+      "fieldname": "os_version",
+      "fieldtype": "Data",
+      "label": "OS Version",
+      "length": 64
+    },
+    {
+      "fieldname": "assignment_section",
+      "fieldtype": "Section Break",
+      "label": "Assignment & Location"
+    },
+    {
+      "fieldname": "assigned_to",
+      "fieldtype": "Link",
+      "label": "Assigned To",
+      "options": "User",
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "location",
+      "fieldtype": "Data",
+      "label": "Location",
+      "length": 255
+    },
+    {
+      "fieldname": "column_break_assign_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "department",
+      "fieldtype": "Link",
+      "label": "Department",
+      "options": "Department"
+    },
+    {
+      "fieldname": "cost_center",
+      "fieldtype": "Link",
+      "label": "Cost Center",
+      "options": "Cost Center"
+    },
+    {
+      "fieldname": "financial_section",
+      "fieldtype": "Section Break",
+      "label": "Financial",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "purchase_cost",
+      "fieldtype": "Currency",
+      "label": "Purchase Cost",
+      "options": "currency"
+    },
+    {
+      "fieldname": "purchase_date",
+      "fieldtype": "Date",
+      "label": "Purchase Date"
+    },
+    {
+      "fieldname": "currency",
+      "fieldtype": "Link",
+      "label": "Currency",
+      "options": "Currency",
+      "default": "IDR"
+    },
+    {
+      "fieldname": "column_break_fin_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "warranty_end",
+      "fieldtype": "Date",
+      "label": "Warranty End"
+    },
+    {
+      "fieldname": "supplier",
+      "fieldtype": "Data",
+      "label": "Supplier",
+      "length": 255
+    },
+    {
+      "fieldname": "po_number",
+      "fieldtype": "Data",
+      "label": "PO Number",
+      "length": 64
+    },
+    {
+      "fieldname": "config_section",
+      "fieldtype": "Section Break",
+      "label": "Configuration & Notes",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "configuration_item",
+      "fieldtype": "Data",
+      "label": "Configuration Item",
+      "length": 128,
+      "description": "Link / reference to Service Configuration Management CI (optional)."
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Text Editor",
+      "label": "Notes"
+    },
+    {
+      "fieldname": "amended_from",
+      "fieldtype": "Link",
+      "label": "Amended From",
+      "no_copy": 1,
+      "options": "ITIL Asset",
+      "print_hide": 1,
+      "read_only": 1
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2026-10-19 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "IT Asset Management",
+  "name": "ITIL Asset",
+  "naming_rule": "Expression",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "IT Asset Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "search_fields": "asset_tag,asset_name,serial_number,hostname,manufacturer,model,lifecycle_status",
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "asset_tag",
+  "track_changes": 1
+}

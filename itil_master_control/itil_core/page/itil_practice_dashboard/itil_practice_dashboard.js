@@ -214,6 +214,148 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 		var practice_slug = p.practice_slug || frappe.scrub(p.practice_name).replace(/_/g, '-');
 		var is_itam = (p.practice_name === 'IT Asset Management' || practice_slug === 'it-asset-management');
 
+		if (is_itam) {
+			render_itam_dashboard(p, recent_records, doctype_ref, has_doctype);
+			return;
+		}
+		function render_itam_dashboard(p, recent_records, doctype_ref, has_doctype) {
+			var html = `
+		<div class="itil-pd-container">
+			<div class="itil-pd-header-card">
+				<div class="itil-pd-header-main">
+					<div class="itil-pd-header-text">
+						<div class="itil-pd-group-badge">SERVICE MANAGEMENT PRACTICES</div>
+						<h1>IT Asset Management</h1>
+						<p>Plan and manage the full lifecycle of all IT assets to maximize value and control costs.</p>
+					</div>
+				</div>
+				<div class="itil-pd-header-meta">
+					<div class="itil-pd-owner">Owner: <span>${frappe.utils.escape_html(p.practice_owner || 'Administrator')}</span></div>
+				</div>
+			</div>
+
+			<!-- 6 KPI (placeholder — data real di D3) -->
+			<div class="itil-pd-metrics-grid" style="grid-template-columns: repeat(6, 1fr);">
+				<div class="itil-pd-metric-card">
+					<div class="itil-pd-metric-label">Total Assets</div>
+					<div class="itil-pd-metric-value" id="kpi-total-assets">—</div>
+					<div class="itil-pd-metric-sub" id="kpi-type-breakdown"></div>
+				</div>
+				<div class="itil-pd-metric-card">
+					<div class="itil-pd-metric-label">Health Score</div>
+					<div class="itil-pd-metric-value text-success" id="kpi-health">—</div>
+				</div>
+				<div class="itil-pd-metric-card">
+					<div class="itil-pd-metric-label">License Compliance</div>
+					<div class="itil-pd-metric-value" id="kpi-license">—</div>
+				</div>
+				<div class="itil-pd-metric-card">
+					<div class="itil-pd-metric-label">Open Lifecycle Actions</div>
+					<div class="itil-pd-metric-value text-warning" id="kpi-open-actions">—</div>
+				</div>
+				<div class="itil-pd-metric-card">
+					<div class="itil-pd-metric-label">Discovery Gap</div>
+					<div class="itil-pd-metric-value text-danger" id="kpi-discovery-gap">—</div>
+				</div>
+				<div class="itil-pd-metric-card">
+					<div class="itil-pd-metric-label">Trend</div>
+					<div class="itil-pd-metric-value" id="kpi-trend">—</div>
+				</div>
+			</div>
+
+			<div class="itil-pd-actions-bar">
+				<button class="btn btn-dark btn-sm" id="btn-open-list">View ITIL Asset List</button>
+				<button class="btn btn-primary btn-sm" id="btn-create-record">+ Create New ITIL Asset</button>
+				<button class="btn btn-default btn-sm" id="btn-reconcile">Reconcile Discovered</button>
+				<button class="btn btn-default btn-sm" id="btn-view-endpoint-devices">View Endpoint Devices</button>
+				<button class="btn btn-default btn-sm" id="btn-view-licenses">License Dashboard</button>
+				<button class="btn btn-default btn-sm" id="btn-view-network">Network & IPAM</button>
+				<button class="btn btn-default btn-sm" disabled title="Phase 2">Rack View</button>
+				<button class="btn btn-default btn-sm" id="btn-open-vsm">Service Value Stream Mapper</button>
+			</div>
+
+			<ul class="nav nav-tabs" id="itam-tabs" style="margin-top:12px;">
+				<li class="nav-item"><a class="nav-link active" href="#" data-tab="overview">Overview</a></li>
+				<li class="nav-item"><a class="nav-link" href="#" data-tab="lifecycle">Asset Lifecycle</a></li>
+				<li class="nav-item"><a class="nav-link" href="#" data-tab="license">License Compliance</a></li>
+				<li class="nav-item"><a class="nav-link" href="#" data-tab="discovery">Discovery & Reconciliation</a></li>
+				<li class="nav-item"><a class="nav-link" href="#" data-tab="network">Network & DCIM</a></li>
+				<li class="nav-item"><a class="nav-link" href="#" data-tab="financial">Financial</a></li>
+				<li class="nav-item"><a class="nav-link" href="#" data-tab="reports">Reports</a></li>
+			</ul>
+
+			<div class="tab-content border border-top-0 p-3 bg-white">
+				<div id="tab-overview">
+					<div class="row">
+						<div class="col-md-7">
+							<h6>Recent Operational Activity</h6>
+							<div id="itam-recent-activity" class="text-muted">Data di D3/D4</div>
+						</div>
+						<div class="col-md-5">
+							<h6>Assets by Lifecycle Status</h6>
+							<div id="itam-lifecycle" class="text-muted">—</div>
+							<hr>
+							<h6>Top License Risks</h6>
+							<div id="itam-license-risks" class="text-muted">—</div>
+						</div>
+					</div>
+				</div>
+				<div id="tab-lifecycle" class="d-none"><p class="text-muted">ITIL Asset List by lifecycle status.</p></div>
+				<div id="tab-license" class="d-none"><p class="text-muted">Software License list.</p></div>
+				<div id="tab-discovery" class="d-none"><p class="text-muted">Reconciliation — D5.</p></div>
+				<div id="tab-network" class="d-none"><p class="text-muted">VLAN + IP Address.</p></div>
+				<div id="tab-financial" class="d-none"><p class="text-muted">Financial fields on ITIL Asset.</p></div>
+				<div id="tab-reports" class="d-none"><p class="text-muted">Report Builder.</p></div>
+			</div>
+		</div>
+	`;
+
+			page.main.html(html);
+
+			// Tombol
+			$('#btn-open-list').on('click', function () { frappe.set_route('List', 'ITIL Asset'); });
+			$('#btn-create-record').on('click', function () { frappe.new_doc('ITIL Asset'); });
+			$('#btn-view-endpoint-devices').on('click', function () { frappe.set_route('List', 'Endpoint Device'); });
+			$('#btn-view-licenses').on('click', function () { frappe.set_route('List', 'Software License'); });
+			$('#btn-view-network').on('click', function () { frappe.set_route('List', 'VLAN'); });
+			$('#btn-open-vsm').on('click', function () { frappe.set_route('service-value-stream-mapper'); });
+			$('#btn-reconcile').on('click', function () {
+				$('#itam-tabs .nav-link').removeClass('active');
+				$('[data-tab="discovery"]').addClass('active');
+				$('.tab-content > div').addClass('d-none');
+				$('#tab-discovery').removeClass('d-none');
+			});
+
+			// Tabs
+			$('#itam-tabs .nav-link').on('click', function (e) {
+				e.preventDefault();
+				$('#itam-tabs .nav-link').removeClass('active');
+				$(this).addClass('active');
+				var tab = $(this).data('tab');
+				$('.tab-content > div').addClass('d-none');
+				$('#tab-' + tab).removeClass('d-none');
+			});
+			// load KPI real
+			frappe.call({
+				method: "itil_master_control.it_asset_management.api.itam_dashboard.get_itam_kpis",
+				callback: function (r) {
+					if (!r.message) return;
+					var d = r.message;
+					$("#kpi-total-assets").text(d.total_assets != null ? d.total_assets : 0);
+					$("#kpi-type-breakdown").text(
+						"Hardware " + (d.hardware || 0) +
+						" | Software " + (d.software || 0) +
+						" | Network " + (d.network || 0)
+					);
+					$("#kpi-health").text((d.health_score != null ? d.health_score : 0) + "%");
+					$("#kpi-license").text((d.license_compliance != null ? d.license_compliance : 0) + "%");
+					$("#kpi-open-actions").text(d.open_lifecycle_actions != null ? d.open_lifecycle_actions : 0);
+					$("#kpi-discovery-gap").text(d.discovery_gap != null ? d.discovery_gap : 0);
+					$("#kpi-trend").text(d.trend || "—");
+				}
+			});
+
+		}
 		var html = `
 			<div class="itil-pd-container">
 				<div class="itil-pd-header-nav">
@@ -331,9 +473,9 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 		}
 
 		// ITAM Endpoint shortcuts (only visible when IT Asset Management)
-		$('#btn-view-endpoint-devices').on('click', function(){ frappe.set_route('List', 'Endpoint Device'); });
-		$('#btn-view-agent-events').on('click', function(){ frappe.set_route('List', 'Endpoint Agent Event'); });
-		$('#btn-view-endpoint-software').on('click', function(){ frappe.set_route('List', 'Endpoint Software'); });
+		$('#btn-view-endpoint-devices').on('click', function () { frappe.set_route('List', 'Endpoint Device'); });
+		$('#btn-view-agent-events').on('click', function () { frappe.set_route('List', 'Endpoint Agent Event'); });
+		$('#btn-view-endpoint-software').on('click', function () { frappe.set_route('List', 'Endpoint Software'); });
 
 		// Initialize Gantt if Project Management
 		if (practice_slug === 'project-management') {
