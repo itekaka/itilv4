@@ -354,7 +354,72 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 					$("#kpi-trend").text(d.trend || "—");
 				}
 			});
+			// D4 - overview content
+			frappe.call({
+				method: "itil_master_control.it_asset_management.api.itam_dashboard.get_recent_activity",
+				args: { limit: 8 },
+				callback: function (r) {
+					var list = r.message || [];
+					if (!list.length) {
+						$("#itam-recent-activity").html('<span class="text-muted">No recent activity.</span>');
+						return;
+					}
+					var html = list.map(function (a) {
+						return (
+							'<div class="py-2 border-bottom">' +
+							'<div class="d-flex justify-content-between">' +
+							'<strong>' + frappe.utils.escape_html(a.title || '') + '</strong>' +
+							'<span class="badge badge-light">' + frappe.utils.escape_html(a.type || '') + '</span>' +
+							'</div>' +
+							'<small class="text-muted">' + (a.when || '') + ' · ' + frappe.utils.escape_html(a.by || '') + '</small>' +
+							'</div>'
+						);
+					}).join('');
+					$("#itam-recent-activity").html(html);
+				}
+			});
 
+			frappe.call({
+				method: "itil_master_control.it_asset_management.api.itam_dashboard.get_lifecycle_breakdown",
+				callback: function (r) {
+					var data = r.message || { rows: [] };
+					if (!data.rows || !data.rows.length) {
+						$("#itam-lifecycle").html('<span class="text-muted">No assets yet.</span>');
+						return;
+					}
+					var html = data.rows.map(function (row) {
+						return (
+							'<div class="d-flex justify-content-between py-1 border-bottom">' +
+							'<span>' + frappe.utils.escape_html(row.status || '') + '</span>' +
+							'<span>' + row.count + ' <small class="text-muted">(' + row.percent + '%)</small></span>' +
+							'</div>'
+						);
+					}).join('');
+					$("#itam-lifecycle").html(html);
+				}
+			});
+
+			frappe.call({
+				method: "itil_master_control.it_asset_management.api.itam_dashboard.get_top_license_risks",
+				args: { limit: 5 },
+				callback: function (r) {
+					var risks = r.message || [];
+					if (!risks.length) {
+						$("#itam-license-risks").html('<span class="text-muted">No risks detected.</span>');
+						return;
+					}
+					var html = risks.map(function (x) {
+						return (
+							'<div class="d-flex justify-content-between py-1 border-bottom">' +
+							'<span>' + frappe.utils.escape_html(x.title || '') +
+							' <small class="text-danger">' + frappe.utils.escape_html(x.risk || '') + '</small></span>' +
+							'<small>' + frappe.utils.escape_html(x.detail || '') + '</small>' +
+							'</div>'
+						);
+					}).join('');
+					$("#itam-license-risks").html(html);
+				}
+			});
 		}
 		var html = `
 			<div class="itil-pd-container">
