@@ -112,7 +112,7 @@ def get_recent_activity(limit=10):
 	for c in comments:
 		activities.append({
 			"type": "Lifecycle",
-			"title": frappe.strip_html(c.content or "")[:120],
+			"title": frappe.utils.strip_html(c.content or "")[:120],
 			"ref": c.reference_name,
 			"doctype": "ITIL Asset",
 			"when": c.creation,

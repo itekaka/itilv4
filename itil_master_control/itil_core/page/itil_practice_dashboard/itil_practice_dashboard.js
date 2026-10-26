@@ -302,7 +302,15 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 				</div>
 				<div id="tab-lifecycle" class="d-none"><p class="text-muted">ITIL Asset List by lifecycle status.</p></div>
 				<div id="tab-license" class="d-none"><p class="text-muted">Software License list.</p></div>
-				<div id="tab-discovery" class="d-none"><p class="text-muted">Reconciliation — D5.</p></div>
+				<div id="tab-discovery" class="d-none">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <span class="text-muted">Endpoint devices not yet linked to an official ITIL Asset</span>
+    <button class="btn btn-primary btn-sm" id="btn-load-unmatched">Refresh List</button>
+  </div>
+  <div id="unmatched-devices">
+    <span class="text-muted">Loading…</span>
+  </div>
+</div>
 				<div id="tab-network" class="d-none"><p class="text-muted">VLAN + IP Address.</p></div>
 				<div id="tab-financial" class="d-none"><p class="text-muted">Financial fields on ITIL Asset.</p></div>
 				<div id="tab-reports" class="d-none"><p class="text-muted">Report Builder.</p></div>
@@ -312,28 +320,136 @@ frappe.pages['itil-practice-dashboard'].on_page_load = function (wrapper) {
 
 			page.main.html(html);
 
-			// Tombol
-			$('#btn-open-list').on('click', function () { frappe.set_route('List', 'ITIL Asset'); });
-			$('#btn-create-record').on('click', function () { frappe.new_doc('ITIL Asset'); });
-			$('#btn-view-endpoint-devices').on('click', function () { frappe.set_route('List', 'Endpoint Device'); });
-			$('#btn-view-licenses').on('click', function () { frappe.set_route('List', 'Software License'); });
-			$('#btn-view-network').on('click', function () { frappe.set_route('List', 'VLAN'); });
-			$('#btn-open-vsm').on('click', function () { frappe.set_route('service-value-stream-mapper'); });
-			$('#btn-reconcile').on('click', function () {
-				$('#itam-tabs .nav-link').removeClass('active');
-				$('[data-tab="discovery"]').addClass('active');
-				$('.tab-content > div').addClass('d-none');
-				$('#tab-discovery').removeClass('d-none');
+			page.main.html(html);
+
+			function load_unmatched_devices() {
+				console.log("[ITAM] load_unmatched_devices called");
+				$("#unmatched-devices").html('<span class="text-muted">Loading…</span>');
+				frappe.call({
+					method: "itil_master_control.it_asset_management.api.itam_dashboard.get_unmatched_devices",
+					args: { limit: 50 },
+					callback: function (r) {
+						var rows = r.message || [];
+						if (!rows.length) {
+							$("#unmatched-devices").html(
+								'<div class="alert alert-success mb-0">All discovered devices are reconciled.</div>'
+							);
+							return;
+						}
+						var tbl =
+							'<table class="table table-sm table-bordered mb-0">' +
+							"<thead><tr>" +
+							"<th>Hostname</th><th>Serial</th><th>Manufacturer</th><th>Status</th><th>Last Seen</th><th></th>" +
+							"</tr></thead><tbody>";
+						rows.forEach(function (d) {
+							tbl +=
+								"<tr>" +
+								"<td>" + frappe.utils.escape_html(d.hostname || d.name || "") + "</td>" +
+								"<td>" + frappe.utils.escape_html(d.serial_number || "—") + "</td>" +
+								"<td>" + frappe.utils.escape_html(d.manufacturer || "—") + "</td>" +
+								"<td>" + frappe.utils.escape_html(d.status || "") + "</td>" +
+								"<td>" + frappe.utils.escape_html(String(d.last_seen || "")) + "</td>" +
+								'<td><button type="button" class="btn btn-xs btn-primary btn-promote" data-device="' +
+								frappe.utils.escape_html(d.name) +
+								'">Promote</button></td></tr>';
+						});
+						tbl += "</tbody></table>";
+						$("#unmatched-devices").html(tbl);
+
+						$("#unmatched-devices .btn-promote").off("click").on("click", function () {
+							var device = $(this).data("device");
+							var $btn = $(this);
+							$btn.prop("disabled", true).text("…");
+							frappe.call({
+								method: "itil_master_control.it_asset_management.api.itam_dashboard.promote_to_itil_asset",
+								args: { endpoint_device: device, lifecycle_status: "In Use" },
+								freeze: true,
+								freeze_message: "Creating ITIL Asset…",
+								callback: function (r) {
+									if (r.message && r.message.success) {
+										frappe.show_alert({
+											message: r.message.message + " (" + (r.message.asset_tag || r.message.asset) + ")",
+											indicator: "green",
+										});
+										load_unmatched_devices();
+										frappe.call({
+											method: "itil_master_control.it_asset_management.api.itam_dashboard.get_itam_kpis",
+											callback: function (r2) {
+												if (!r2.message) return;
+												var d = r2.message;
+												$("#kpi-total-assets").text(d.total_assets != null ? d.total_assets : 0);
+												$("#kpi-type-breakdown").text(
+													"Hardware " + (d.hardware || 0) +
+													" | Software " + (d.software || 0) +
+													" | Network " + (d.network || 0)
+												);
+												$("#kpi-health").text((d.health_score != null ? d.health_score : 0) + "%");
+												$("#kpi-license").text((d.license_compliance != null ? d.license_compliance : 0) + "%");
+												$("#kpi-open-actions").text(d.open_lifecycle_actions != null ? d.open_lifecycle_actions : 0);
+												$("#kpi-discovery-gap").text(d.discovery_gap != null ? d.discovery_gap : 0);
+												$("#kpi-trend").text(d.trend || "—");
+											},
+										});
+									} else {
+										$btn.prop("disabled", false).text("Promote");
+										frappe.msgprint((r.message && r.message.message) || "Promote failed");
+									}
+								},
+								error: function () {
+									$btn.prop("disabled", false).text("Promote");
+								},
+							});
+						});
+					},
+					error: function () {
+						$("#unmatched-devices").html(
+							'<div class="alert alert-danger mb-0">Failed to load devices.</div>'
+						);
+					},
+				});
+			}
+
+			// Tombol aksi (satu kali saja, pakai off supaya tidak dobel)
+			$("#btn-open-list").off("click").on("click", function () {
+				frappe.set_route("List", "ITIL Asset");
+			});
+			$("#btn-create-record").off("click").on("click", function () {
+				frappe.new_doc("ITIL Asset");
+			});
+			$("#btn-view-endpoint-devices").off("click").on("click", function () {
+				frappe.set_route("List", "Endpoint Device");
+			});
+			$("#btn-view-licenses").off("click").on("click", function () {
+				frappe.set_route("List", "Software License");
+			});
+			$("#btn-view-network").off("click").on("click", function () {
+				frappe.set_route("List", "VLAN");
+			});
+			$("#btn-open-vsm").off("click").on("click", function () {
+				frappe.set_route("service-value-stream-mapper");
+			});
+			$("#btn-load-unmatched").off("click").on("click", function () {
+				load_unmatched_devices();
+			});
+			$("#btn-reconcile").off("click").on("click", function () {
+				$("#itam-tabs .nav-link").removeClass("active");
+				$('[data-tab="discovery"]').addClass("active");
+				$(".tab-content > div").addClass("d-none");
+				$("#tab-discovery").removeClass("d-none");
+				load_unmatched_devices();
 			});
 
-			// Tabs
-			$('#itam-tabs .nav-link').on('click', function (e) {
+			// Tabs — SATU handler saja
+			$("#itam-tabs .nav-link").off("click").on("click", function (e) {
 				e.preventDefault();
-				$('#itam-tabs .nav-link').removeClass('active');
-				$(this).addClass('active');
-				var tab = $(this).data('tab');
-				$('.tab-content > div').addClass('d-none');
-				$('#tab-' + tab).removeClass('d-none');
+				$("#itam-tabs .nav-link").removeClass("active");
+				$(this).addClass("active");
+				var tab = $(this).data("tab");
+				$(".tab-content > div").addClass("d-none");
+				$("#tab-" + tab).removeClass("d-none");
+				if (tab === "discovery") {
+					load_unmatched_devices();
+				}
 			});
 			// load KPI real
 			frappe.call({
